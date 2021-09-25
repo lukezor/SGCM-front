@@ -1,0 +1,46 @@
+image: node:14.15.1-buster
+
+###### CACHE ######
+cache:
+  paths:
+    - node_modules/
+    - dist/
+###### /CACHE ######
+
+###### STAGES ######
+stages:
+  - build
+  - deploy
+###### /STAGES ######
+
+################# BUILD STEPS #################
+BUILD WEB APP:
+  artifacts:
+    paths:
+      - dist/
+  stage: build
+  script:
+    - yarn install
+    - yarn run generate
+  only:
+    refs:
+      #- master
+      - task/deploy
+################# /BUILD STEPS #################
+
+################# DEPLOY STEPS #################
+DEPLOY - S3:
+  stage: deploy
+  image:
+    name: banst/awscli
+    entrypoint: [""]
+  variables:
+    S3_BUCKET: template.digitalsys.com.br
+  script:
+    - aws configure set region us-east-1
+    - aws s3 cp ./dist s3://$S3_BUCKET/ --recursive --include "*/*" --acl public-read
+  only:
+    #- master
+    - task/deploy
+################# /DEPLOY STEPS #################
+
