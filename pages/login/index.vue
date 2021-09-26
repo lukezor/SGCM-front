@@ -2,7 +2,7 @@
   <div>
     <h2>Bem vindo à Clínica Médica</h2>
     <form>
-        <Input placeHolder="Nome de usuário" v-model="user.login"/>
+        <Input placeHolder="Usuário" v-model="user.login"/>
         <Input type="password" placeHolder="Senha" v-model="user.password"/>
         <div style="text-align: end" class="forgotPass">
             <NuxtLink class="form_link" to="/recuperar-senha">Esqueci minha senha ></NuxtLink>
@@ -49,8 +49,9 @@ export default {
   h2{
       font-weight: 600;
       font-size: 1.5em;
-      margin-bottom: 20px;
       text-align: center;
+      color:#fff;
+      cursor:default;
   }
   .forgotPass{
       font-weight: 400;
