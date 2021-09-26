@@ -55,7 +55,10 @@ export default {
         z-index: 99;
     }
     section .contentArea .formBox{
-        width:50%;
+        background: #FFFFFF;
+        padding:50px;
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
     }
     @media (max-width: 900px) {
         section .imgArea{
@@ -67,7 +70,7 @@ export default {
             background-color: #4DB0B0;
         }
         .imgTop{
-            margin-top:0;
+            display:none;
         }
         .imgArea p{
             display:none
@@ -81,6 +84,8 @@ export default {
             z-index: 1;
         }
         section .contentArea .formBox{
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
             width:90%;
             background:white;
             padding: 50px;
