@@ -1,9 +1,11 @@
 <template>
   <!-- <div class="container is-widescreen pt-0"> -->
-  <div>
+  <div class="body">
     <Navbar/>
     <Sidebar/>
-    <nuxt />
+    <div class="content-area">
+      <nuxt />
+    </div>
   </div>
 </template>
 
@@ -25,9 +27,16 @@ export default {
   box-sizing: border-box;
   font-family: sans-serif;
 }
+.body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 .content-area{
-  height: 100%;
-  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
   background-color: #EEE;
 }
 a{

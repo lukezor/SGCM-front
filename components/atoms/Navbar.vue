@@ -1,9 +1,13 @@
 <template>
-    <b-navbar>
+    <b-navbar :mobile-burger="false" :centered="true" :shadow="true">
         <template #brand>
             <b-navbar-item tag="div" class="icone">
                 <b-icon @click.native="changeMenuState" icon="menu" size="is-medium"/>
             </b-navbar-item>
+        </template>
+
+        <template #start>
+            <p class="user-welcome">Bem Vindo, {{username}}</p>
         </template>
 
         <template #end>
@@ -16,7 +20,12 @@
 
 <script>
 export default{
-   methods: {
+    data(){
+        return{
+            username: "TESTE"
+        }
+    },
+    methods: {
         changeMenuState() {
             this.$store.commit('changeMenuState')
         },
@@ -32,5 +41,11 @@ export default{
 }
 nav{
   background-color: #367B7B;
+}
+.user-welcome{
+    align-self:center;
+    color:#fff;
+    font-size: 18px;
+    font-weight: 300;
 }
 </style>
