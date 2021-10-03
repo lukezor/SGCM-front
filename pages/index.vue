@@ -2,7 +2,7 @@
 <div class = "home">
   <div class = "container-left">
     <div class="container-left-top">
-      <p>Container norte-esquerda</p>
+      <CardAgendamentos/>
     </div>
     <div class="container-left-bottom">
       <p>Container sul-esquerda</p>
@@ -20,8 +20,10 @@
 </template>
 
 <script>
+import CardAgendamentos from '../components/atoms/CardAgendamentos.vue';
 export default {
   name: "HomePage",
+  components:{CardAgendamentos}
 };
 </script>
 

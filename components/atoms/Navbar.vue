@@ -39,6 +39,9 @@ export default{
 .icone{
   cursor:pointer
 }
+.icon{
+    color:white;
+}
 nav{
   background-color: #367B7B;
 }

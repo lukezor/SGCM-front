@@ -50,20 +50,17 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .p-1 {
   padding: 1em;
 }
 .menu-label{
     color:#CCC;
 }
-.icon{
-    color:#EEE;
+.menu-list a{
+    color:#EEE !important;
 }
 span{
     color:#EEE
-}
-.menu-list a:hover{
-    background-color:slategray
 }
 </style>
