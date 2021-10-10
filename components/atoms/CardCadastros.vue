@@ -1,21 +1,18 @@
 <template>
   <div class="padding">
       <div class="titleWrapper">
-        <p class="cardTitle">Agendamento de Consultas</p>
+        <p class="cardTitle">Cadstro de Usuários</p>
         <div @click.native="reloadCard()" class="reloadButton">
             <b-icon class="reloadIcon" @click.native="reloadCard()" icon="reload"/>
         </div>
       </div>
       <div class="infosWrapper">
-          <p> Data: {{today()}} </p>
-          <p> Consultas marcadas: {{consultasMarcadas}} </p>
-          <p> Horários livres: {{horariosLivres}} </p>
-          <p> Consultas finalizadas: {{consultasFinalizadas}} </p>
-          <p> Consultas canceladas: {{consultasCanceladas}} </p>
+          <p> Total de clientes cadastrados: {{countCadastros}} </p>
+          <p> Novos clientes hoje: {{cadastrosHoje}} </p>
       </div>
       <div class="buttonArea">
-          <b-button @click.native="redirect('/agendamento')" class="leftButton" type="is-primary">Novo agendamento</b-button>
-          <b-button @click.native="redirect('/agendamento')" class="rightButton" type="is-primary is-light">Visualizar agendamentos</b-button>
+          <b-button @click.native="redirect('/cadastro')" class="leftButton" type="is-primary">Cadastrar novo usuário</b-button>
+          <b-button @click.native="redirect('/cadastro')" class="rightButton" type="is-primary is-light">Listagem de cadastros</b-button>
       </div>
   </div>
 </template>
@@ -24,23 +21,14 @@
 export default {
     data(){
         return{
-            consultasMarcadas: "0",
-            horariosLivres: "0",
-            consultasFinalizadas: "0",
-            consultasCanceladas: "0"
+            countCadastros: "0",
+            cadastrosHoje: "0",
         }
     },
     methods:{
         reloadCard(){
             //alterar quando tiver api
             window.location.reload()
-        },
-        today(){
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
-            return (today = dd + '/' + mm + '/' + yyyy) 
         },
         redirect(location){
             this.$router.push({path: location});

@@ -17,8 +17,9 @@
           <b-menu-list label="Páginas">
             <b-menu-item icon="home" label="Home" tag="router-link" to="/"></b-menu-item>
             <b-menu-item icon="clock-outline" label="Agendamentos" tag="router-link" to="/agendamento"></b-menu-item>
-            <b-menu-item icon="account" label="Prontuários" tag="router-link" to="/"></b-menu-item>
-            <b-menu-item icon="newspaper-variant-outline" label="Relatórios" tag="router-link" to="/"></b-menu-item>
+            <b-menu-item icon="newspaper-variant-outline" label="Prontuários" tag="router-link" to="/"></b-menu-item>
+            <b-menu-item icon="account" label="Cadastros" tag="router-link" to="/cadastro"></b-menu-item>
+            <b-menu-item icon="chart-box-outline" label="Relatórios" tag="router-link" to="/relatorios"></b-menu-item>
           </b-menu-list>
           <b-menu-list label="Ações">
             <b-menu-item @click.native="redirect" label="Logout" icon="close-circle-outline"></b-menu-item>

@@ -5,15 +5,15 @@
       <CardAgendamentos/>
     </div>
     <div class="container-left-bottom">
-      <p>Container sul-esquerda</p>
+      <CardCadastros/>
     </div>
   </div>
   <div class="container-right">
     <div class="container-right-top">
-      <p>Container norte-direita</p>
+      <CardConsultas/>
     </div>
     <div class="container-right-bottom">
-      <p>Container sul-direita</p>
+      <CardRelatorios/>
     </div>
   </div>
 </div>
@@ -21,9 +21,12 @@
 
 <script>
 import CardAgendamentos from '../components/atoms/CardAgendamentos.vue';
+import CardCadastros from '../components/atoms/CardCadastros.vue';
+import CardRelatorios from '../components/atoms/CardRelatorios.vue';
+import CardConsultas from '../components/atoms/CardConsultas.vue';
 export default {
   name: "HomePage",
-  components:{CardAgendamentos}
+  components:{CardAgendamentos,CardCadastros,CardRelatorios,CardConsultas}
 };
 </script>
 
