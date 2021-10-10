@@ -1,6 +1,6 @@
 <template>
 <div class = "home">
-  <div class = "container-left">
+  <div v-if="userLoaded" class = "container-left">
     <div class="container-left-top">
       <CardAgendamentos/>
     </div>
@@ -8,7 +8,7 @@
       <CardCadastros/>
     </div>
   </div>
-  <div class="container-right">
+  <div v-if="userLoaded" class="container-right">
     <div class="container-right-top">
       <CardConsultas/>
     </div>
@@ -24,9 +24,16 @@ import CardAgendamentos from '../components/atoms/CardAgendamentos.vue';
 import CardCadastros from '../components/atoms/CardCadastros.vue';
 import CardRelatorios from '../components/atoms/CardRelatorios.vue';
 import CardConsultas from '../components/atoms/CardConsultas.vue';
+import $store from '~/store/userData';
 export default {
   name: "HomePage",
-  components:{CardAgendamentos,CardCadastros,CardRelatorios,CardConsultas}
+  middleware: 'authenticated',
+  components:{CardAgendamentos,CardCadastros,CardRelatorios,CardConsultas},
+  computed:{
+        userLoaded() {
+            return $store.state.user == null ? null : $store.state.user.username
+        }
+    },
 };
 </script>
 

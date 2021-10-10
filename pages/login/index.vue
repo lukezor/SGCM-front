@@ -16,8 +16,11 @@
 </template>
 
 <script>
-import Input from "@/components/atoms/Input"
-import Button from "@/components/atoms/Button"
+import Input from "~/components/atoms/Input"
+import Button from "~/components/atoms/Button"
+import notification from '~/utils/notification'
+import apiClient from '~/utils/apiClient'
+import $store from '~/store/userData'
 export default {
   name: "LoginPage",
   layout: 'login',
@@ -33,11 +36,33 @@ export default {
             }
         }
     },
-    methods:{
-        async doLogin(){
-            //TODO: Validar login e integrar com api
-            this.$router.push("/")
+    methods: {
+        async doLogin() {
+            const loadingComponent = this.$buefy.loading.open()
+            try {
+                await apiClient.login(this.user.login, this.user.password)
+
+                const { redirect } = this.$route.query
+                let url = redirect || "/"
+                this.$router.push({ path: url })
+            } catch (err) {
+                if (err.data && err.data.non_field_errors) {
+                    notification.sendNotification('Credenciais inválidas!', 'is-danger', 5000)
+                } else if (err.data && err.data.detail == 'User is suspended') {
+                    notification.sendNotification('Usuário está suspenso!', 'is-danger', 5000)
+                } else if (err.data && err.data.detail == 'User is inactivated') {
+                    notification.sendNotification('Usuário está desativado!', 'is-danger', 5000)
+                } else {
+                    notification.sendNotification('Ocorreu um erro, tente novamente!', 'is-danger', 5000)
+                }
+            } finally {
+                loadingComponent.close()
+            }
         }
+    },
+    created(){
+        $store.commit('setToken', null)
+        $store.commit('setUser', null)
     }
 };
 </script>

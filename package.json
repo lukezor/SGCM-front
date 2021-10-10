@@ -18,9 +18,11 @@
     "nuxt-buefy": "^0.4.3",
     "nuxt-material-design-icons": "^1.0.4",
     "nuxt-vuex-localstorage": "^1.2.7",
+    "query-string": "^7.0.1",
     "sass": "^1.42.1",
     "sass-loader": "^10.1.0",
-    "url-join": "^4.0.1"
+    "url-join": "^4.0.1",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.1.0",

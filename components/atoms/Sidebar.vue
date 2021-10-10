@@ -22,7 +22,7 @@
             <b-menu-item icon="chart-box-outline" label="Relatórios" tag="router-link" to="/relatorios"></b-menu-item>
           </b-menu-list>
           <b-menu-list label="Ações">
-            <b-menu-item @click.native="redirect" label="Logout" icon="close-circle-outline"></b-menu-item>
+            <b-menu-item @click.native="logout" label="Logout" icon="close-circle-outline"></b-menu-item>
           </b-menu-list>
         </b-menu>
       </div>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import apiClient from '~/utils/apiClient'
 export default {
   data() {
     return {
@@ -44,8 +45,9 @@ export default {
         changeMenuState() {
             this.$store.commit('changeMenuState')
         },
-        redirect(){
-          window.location.replace('http://localhost:3000/login')
+        async logout(){
+            await apiClient.logout()
+            window.location.replace('http://localhost:3000/login')
         }
    }
 };
