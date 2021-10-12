@@ -11,8 +11,8 @@
           <p> Novos clientes hoje: {{cadastrosHoje}} </p>
       </div>
       <div class="buttonArea">
-          <b-button @click.native="redirect('/cadastro')" class="leftButton" type="is-primary">Cadastrar novo usuário</b-button>
-          <b-button @click.native="redirect('/cadastro')" class="rightButton" type="is-primary is-light">Listagem de cadastros</b-button>
+          <b-button @click.native="redirect('/cadastro/')" class="leftButton" type="is-primary">Cadastrar novo usuário</b-button>
+          <b-button @click.native="redirect('/cadastro/listagem')" class="rightButton" type="is-primary is-light">Listagem de cadastros</b-button>
       </div>
   </div>
 </template>

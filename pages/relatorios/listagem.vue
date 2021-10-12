@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: "ListagemAgendamentos",
+  name: "RelatoriosListagem",
 };
 </script>
 

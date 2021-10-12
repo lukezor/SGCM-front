@@ -12,7 +12,7 @@
           <p> Relatórios disponíveis: {{countRelatorios}} </p>
       </div>
       <div class="buttonArea">
-          <b-button @click.native="redirect('/relatorios')" class="leftButton" type="is-primary">Geração de relatórios</b-button>
+          <b-button @click.native="redirect('/relatorios/listagem')" class="leftButton" type="is-primary">Geração de relatórios</b-button>
       </div>
   </div>
 </template>

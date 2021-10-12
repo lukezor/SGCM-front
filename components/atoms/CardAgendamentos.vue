@@ -14,8 +14,8 @@
           <p> Consultas canceladas: {{consultasCanceladas}} </p>
       </div>
       <div class="buttonArea">
-          <b-button @click.native="redirect('/agendamento')" class="leftButton" type="is-primary">Novo agendamento</b-button>
-          <b-button @click.native="redirect('/agendamento')" class="rightButton" type="is-primary is-light">Visualizar agendamentos</b-button>
+          <b-button @click.native="redirect('/agendamento/')" class="leftButton" type="is-primary">Novo agendamento</b-button>
+          <b-button @click.native="redirect('/agendamento/listagem')" class="rightButton" type="is-primary is-light">Visualizar agendamentos</b-button>
       </div>
   </div>
 </template>

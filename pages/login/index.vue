@@ -46,12 +46,11 @@ export default {
                 let url = redirect || "/"
                 this.$router.push({ path: url })
             } catch (err) {
+                console.log(err)
                 if (err.data && err.data.non_field_errors) {
                     notification.sendNotification('Credenciais inválidas!', 'is-danger', 5000)
-                } else if (err.data && err.data.detail == 'User is suspended') {
-                    notification.sendNotification('Usuário está suspenso!', 'is-danger', 5000)
-                } else if (err.data && err.data.detail == 'User is inactivated') {
-                    notification.sendNotification('Usuário está desativado!', 'is-danger', 5000)
+                } else if (err.data && (err.data.password || err.data.username)) {
+                    notification.sendNotification('Campos em branco não são aceitos', 'is-danger', 5000)
                 } else {
                     notification.sendNotification('Ocorreu um erro, tente novamente!', 'is-danger', 5000)
                 }
