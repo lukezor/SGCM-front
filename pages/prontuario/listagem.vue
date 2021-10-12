@@ -2,13 +2,13 @@
   <div class = "main-container">
     <div class= "padding-geral">
       <div>
-        <p class="title"> Agendamento de consultas </p>
+        <p class="title"> Prontuários </p>
       </div>
       <div class="container is-fluid">
         <Table :data="dados" :columns="colunas"/>
       </div>
       <div class="buttons">
-        <b-button @click.native="redirect('/agendamento/')" type="is-primary">Agendar nova consulta</b-button>
+        <b-button @click.native="redirect('/prontuario/')" type="is-primary">Criar novo prontuário</b-button>
       </div>
     </div>
   </div>
@@ -17,16 +17,16 @@
 <script>
 import Table from '~/components/molecules/Table.vue';
 export default {
-  name: "AgendamentoListagem",
+  name: "ProntuarioListagem",
   components:{Table},
   data(){
     return{
       dados:[
-        { 'id': 1, 'nome_paciente': 'Jesse', 'nome_medico': 'Simmons', 'date': '15/10/2021', 'time': '12:00' },
-        { 'id': 2, 'nome_paciente': 'John', 'nome_medico': 'Jacobs', 'date': '15/10/2021', 'time': '13:00' },
-        { 'id': 3, 'nome_paciente': 'Tina', 'nome_medico': 'Gilbert', 'date': '14/10/2021', 'time': '14:00' },
-        { 'id': 4, 'nome_paciente': 'Clarence', 'nome_medico': 'Flores', 'date': '13/10/2021', 'time': '08:00' },
-        { 'id': 5, 'nome_paciente': 'Anne', 'nome_medico': 'Lee', 'date': '14/10/2021', 'time': '12:00' }
+        { 'id': 1, 'nome_paciente': 'Jesse', 'nome_medico': 'Simmons', 'date': '15/10/2021' },
+        { 'id': 2, 'nome_paciente': 'John', 'nome_medico': 'Jacobs', 'date': '15/10/2021' },
+        { 'id': 3, 'nome_paciente': 'Tina', 'nome_medico': 'Gilbert', 'date': '14/10/2021' },
+        { 'id': 4, 'nome_paciente': 'Clarence', 'nome_medico': 'Flores', 'date': '13/10/2021'},
+        { 'id': 5, 'nome_paciente': 'Anne', 'nome_medico': 'Lee', 'date': '14/10/2021'}
       ],
       colunas:[
                 {
@@ -41,13 +41,9 @@ export default {
                 },
                 {
                     field: 'date',
-                    label: 'Data',
+                    label: 'Data de atendimento',
                     centered: true
                 },
-                {
-                    field: 'time',
-                    label: 'Horário',
-                }
             ]
       }
     },
