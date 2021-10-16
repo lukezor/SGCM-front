@@ -5,7 +5,7 @@
         <p class="title"> Agendamento de consultas </p>
       </div>
       <div class="container is-fluid">
-        <Table :data="dados" :columns="colunas"/>
+        <Table :data="dados" :columns="colunas" :path="'/agendamento/'"/>
       </div>
       <div class="buttons">
         <b-button @click.native="redirect('/agendamento/')" type="is-primary">Agendar nova consulta</b-button>
@@ -47,6 +47,12 @@ export default {
                 {
                     field: 'time',
                     label: 'Horário',
+                    centered: true
+                },
+                {
+                    field:'crud-options-confirm-edit',
+                    label:'Acoes',
+                    centered: true
                 }
             ]
       }
