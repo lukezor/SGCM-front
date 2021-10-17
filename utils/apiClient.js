@@ -125,6 +125,23 @@ class ApiClient {
     async logout(){
         return internalPost(urljoin('auth','token','logout'),null)
     }
+
+    // USERS
+    async getAllUsers(){
+        return internalGet(urljoin('auth', 'users/'))
+    }
+
+    async getUserById(userId) {
+        return internalGet(urljoin('auth', 'users', userId.toString() + '/'))
+    }
+
+    async createUser(user) {
+        return internalPost('auth/users/', user)
+    }
+
+    async updateUser(user) {
+        return internalPut(urljoin('auth','users', user.id.toString() + '/'), user)
+    }
 }
 
 

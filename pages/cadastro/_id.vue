@@ -1,0 +1,165 @@
+<template>
+    <div class = "main-container">
+        <div class= "padding-geral">
+            <div class="titulo">
+                <div v-if="user.id == null">
+                    <h1 class="title"> Adicionar Usuário </h1>
+                </div>
+                <div v-else>
+                    <h1 class="title"> Alterar Usuário </h1>
+                </div>
+            </div>
+
+            <div class ="padding-interno">
+                <ValidationObserver ref="observer">
+                <div class="columns">
+                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                        <CustomInput rules="required|max:100" type="text" label="Nome *" v-model="user.first_name" :disabled="user.id"/>
+                    </div>
+                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                        <CustomInput rules="required|max:100" type="text" label="Sobrenome *" v-model="user.last_name" :disabled="user.id"/>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column is-full-mobile is-half-tablet is-8-desktop">
+                        <CustomInput rules="required|max:100" type="email" label="Endereço de e-mail *" v-model="user.email"/>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column is-full-mobile is-one-quarter-tablet is-4-desktop">
+                        <CustomInput  rules="required|max:100" type="text" label="Login *" v-model="user.username" :disabled="user.id"/>
+                    </div>
+                    <div class="column is-full-mobile is-one-quarter-tablet is-4-desktop">
+                        <CustomSelect
+                            :itens="[
+                                    {value:'0', text:'Administrador'}, 
+                                    {value:'1', text:'Secretário'},
+                                    {value:'2', text:'Paciente'}
+                                ]"
+                            label="Tipo de usuário *" 
+                            itemValue="value"
+                            itemText="text"
+                            v-model="user.user_type"
+                        />
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                        <CustomInput rules="required|max:100" type="password" label="Senha *" v-model="user.password"/>
+                    </div>
+                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                        <CustomInput rules="required|max:100" type="password" label="Confirmação de senha *" v-model="passConfirmation"/>
+                    </div>
+                </div>
+                </ValidationObserver>
+            </div>
+
+            <div class="botoes">
+                <b-button v-if="user.id == null" @click.native="salvar()" type="is-primary">Cadastrar novo usuário</b-button>
+                <b-button v-else @click.native="alterar()" type="is-primary">Alterar usuário</b-button>
+                <b-button @click.native="retornar()" type="is-primary-light"> Voltar </b-button>
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<script>
+    import { ValidationObserver } from 'vee-validate'
+    import CustomInput from '~/components/atoms/CustomInput.vue'
+    import CustomSelect from '~/components/atoms/CustomSelect.vue'
+    import notification from '~/utils/notification'
+    import apiClient from '~/utils/apiClient'
+
+    export default {
+
+        middleware: 'authenticated',
+        name: 'CadastroUsuário',
+
+        components: {
+            ValidationObserver,
+            CustomInput,
+            CustomSelect
+        },
+        data(){
+            return {
+                user: {
+                    id: this.$route.params.id,
+                    user_type: '2',
+                    email: null,
+                    password: null,
+                    username: null,
+                    first_name: null,
+                    last_name: null
+                },
+                passConfirmation: null
+            }
+        },
+        methods:{
+            sendError(err) {
+                notification.sendNotification(err, 'is-danger', 5000)
+            },
+            async salvar() {
+                console.log(this.user)
+                if (this.passConfirmation !== this.user.password)
+                    notification.sendNotification('As senhas não conferem!', 'is-danger', 5000)
+                else try{
+                    await apiClient.createUser(this.user)
+                    }catch(err){
+                        this.sendError(err)
+                    }
+            },
+            async alterar() {
+                if (this.passConfirmation !== this.user.password)
+                    notification.sendNotification('As senhas não conferem!', 'is-danger', 5000)
+                else try{
+                    await apiClient.updateUser(this.user)
+                    }catch(err){
+                        this.sendError(err)
+                    }
+            },
+            retornar(){
+                this.$router.push('/cadastro/listagem')
+            }
+        },
+
+        async created() {
+            if (this.user.id) {
+                const loadingComponent = this.$buefy.loading.open()
+                try {    
+                    this.user = await apiClient.getUserById(this.user.id)
+                } catch (err) {
+                    notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+                } finally {
+                    loadingComponent.close()
+                }
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .main-container {
+        background-color: #fff;
+        border-radius: 8px;
+        flex:1;
+        display:flex;
+    }
+    .padding-geral{
+        padding:35px;
+        width:100%;
+        height: 100%;
+    }
+    .padding-interno{
+        padding:10px;
+    }
+    .titulo{
+        margin-bottom:20px
+    }
+    .botoes{
+        margin-top: 20px;
+    }
+</style>

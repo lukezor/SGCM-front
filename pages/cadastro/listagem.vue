@@ -5,7 +5,7 @@
         <p class="title"> Cadastro de usuários </p>
       </div>
       <div class="container is-fluid">
-        <Table :data="dados" :columns="colunas"/>
+        <Table :data="dados" :columns="colunas" :path="''"/>
       </div>
       <div class="buttons">
         <b-button @click.native="redirect('/cadastro/')" type="is-primary">Cadastrar novo usuário</b-button>
@@ -18,6 +18,7 @@
 import Table from '~/components/molecules/Table.vue';
 export default {
   name: "CadastroListagem",
+  middleware: 'authenticated',
   components:{Table},
   data(){
     return{
@@ -44,6 +45,11 @@ export default {
                     label: 'Data de cadastro',
                     centered: true
                 },
+                {
+                    field: 'crud-options-edit',
+                    label: 'Ações',
+                    centered: true
+                }
             ]
       }
     },

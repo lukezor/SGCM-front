@@ -22,6 +22,7 @@
     "sass": "^1.42.1",
     "sass-loader": "^10.1.0",
     "url-join": "^4.0.1",
+    "vee-validate": "^3.4.13",
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
