@@ -1,5 +1,9 @@
 <template>
 <div class = "home">
+  <div v-if="userLoaded" class = "container-mobile">
+    <p class = "mobile-title">Bem vindo ao sistema!</p>
+    <p class = "mobile-subtitle">Utilize o menu lateral para acessar as funcionalidades.</p>
+  </div>
   <div v-if="userLoaded" class = "container-left">
     <div class="container-left-top">
       <CardAgendamentos/>
@@ -83,6 +87,33 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.container-mobile{
+  display:none
+}
+
+@media only screen and (max-width: 900px) {
+  .container-right{
+    display:none
+  }
+  .container-left{
+    display:none
+  }
+  .container-mobile{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding:30px;
+    width:100%;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  .mobile-title{
+    font-size: 20px;
+    font-weight: 800;
+  }
 }
 
 

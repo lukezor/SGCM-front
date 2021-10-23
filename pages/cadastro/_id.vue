@@ -29,14 +29,15 @@
 
                 <div class="columns">
                     <div class="column is-full-mobile is-one-quarter-tablet is-4-desktop">
-                        <CustomInput  rules="required|max:100" type="text" label="Login *" v-model="user.username" :disabled="user.id"/>
+                        <CustomInput  rules="required|max:100" type="text" label="Login *" v-model="user.username" :disabled="user.id" :upperCase="2"/>
                     </div>
                     <div class="column is-full-mobile is-one-quarter-tablet is-4-desktop">
                         <CustomSelect
                             :itens="[
-                                    {value:'0', text:'Administrador'}, 
-                                    {value:'1', text:'Secretário'},
-                                    {value:'2', text:'Paciente'}
+                                    {value:'ADMIN', text:'Administrador'}, 
+                                    {value:'SECRETARIO', text:'Secretário'},
+                                    {value:'PACIENTE', text:'Paciente'},
+                                    {value:'MEDICO', text:'Médico'}
                                 ]"
                             label="Tipo de usuário *" 
                             itemValue="value"

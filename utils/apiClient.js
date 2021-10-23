@@ -128,7 +128,7 @@ class ApiClient {
 
     // USERS
     async getAllUsers(){
-        return internalGet(urljoin('auth', 'users/'))
+        return internalGet(urljoin('api', 'users/'))
     }
 
     async getUserById(userId) {

@@ -44,6 +44,11 @@ export default {
                     label: 'Data de atendimento',
                     centered: true
                 },
+                {
+                    field:'crud-options-confirm-edit',
+                    label:'Acoes',
+                    centered: true
+                }
             ]
       }
     },

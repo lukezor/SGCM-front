@@ -16,32 +16,33 @@
 
 <script>
 import Table from '~/components/molecules/Table.vue';
+import apiClient from '~/utils/apiClient.js'
+import notification from '~/utils/notification.js'
 export default {
   name: "CadastroListagem",
   middleware: 'authenticated',
   components:{Table},
   data(){
     return{
-      dados:[
-        { 'id': 1, 'nome_usuario': 'John', 'tipo_usuario': 'Administrador', 'data_cadastro': '15/10/2021'},
-        { 'id': 2, 'nome_usuario': 'Doe', 'tipo_usuario': 'Administrador', 'data_cadastro': '15/10/2021'},
-        { 'id': 3, 'nome_usuario': 'Tina', 'tipo_usuario': 'Secretario', 'data_cadastro': '14/10/2021'},
-        { 'id': 4, 'nome_usuario': 'Teste', 'tipo_usuario': 'Secretario', 'data_cadastro': '13/10/2021'},
-        { 'id': 5, 'nome_usuario': 'Anne', 'tipo_usuario': 'Paciente', 'data_cadastro': '14/10/2021'}
-      ],
+      dados:[],
       colunas:[
                 {
-                    field: 'nome_usuario',
+                    field: 'username',
                     label: 'Nome do usuário',
                     searchable: true,
                 },
                 {
-                    field: 'tipo_usuario',
+                    field: 'user_type',
                     label: 'Tipo de usuário',
                     searchable: true,
                 },
                 {
-                    field: 'data_cadastro',
+                    field: 'email',
+                    label: 'Email',
+                    centered: false
+                },
+                {
+                    field: 'date_joined',
                     label: 'Data de cadastro',
                     centered: true
                 },
@@ -53,10 +54,21 @@ export default {
             ]
       }
     },
-  methods:{
+    methods:{
         redirect(location){
             this.$router.push({path: location});
         }
+    },
+    async created(){
+      const loadingComponent = this.$buefy.loading.open()
+      try{
+        this.dados = await apiClient.getAllUsers()
+      } catch (err) {
+        console.log("Erro: ",err)
+        notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+      }
+      console.log("retorno: ",this.dados)
+      loadingComponent.close()
     }
 };
 </script>
