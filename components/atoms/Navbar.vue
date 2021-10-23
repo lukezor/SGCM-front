@@ -24,7 +24,7 @@ import apiClient from '~/utils/apiClient'
 export default{
     computed:{
         usuario() {
-            return $store.state.user == null ? null : $store.state.user.username
+            return $store.state.user == null ? null : ($store.state.user.first_name + ' ' + $store.state.user.last_name + ' (' + $store.state.user.user_type + ')')
         }
     },
     methods: {

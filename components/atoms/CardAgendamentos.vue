@@ -7,11 +7,8 @@
         </div>
       </div>
       <div class="infosWrapper">
-          <p> Data: {{today()}} </p>
-          <p> Consultas marcadas: {{consultasMarcadas}} </p>
-          <p> Horários livres: {{horariosLivres}} </p>
-          <p> Consultas finalizadas: {{consultasFinalizadas}} </p>
-          <p> Consultas canceladas: {{consultasCanceladas}} </p>
+          <p> Data: {{today}} </p>
+          <p> Consultas marcadas hoje: {{consultasMarcadas}} </p>
       </div>
       <div class="buttonArea">
           <b-button @click.native="redirect('/agendamento/')" class="leftButton" type="is-primary">Novo agendamento</b-button>
@@ -21,30 +18,44 @@
 </template>
 
 <script>
+import apiClient from '~/utils/apiClient.js'
+import notification from '~/utils/notification.js'
 export default {
     data(){
         return{
-            consultasMarcadas: "0",
-            horariosLivres: "0",
-            consultasFinalizadas: "0",
-            consultasCanceladas: "0"
+            today: "Carregando...",
+            consultasMarcadas: "Carregando...",
         }
     },
     methods:{
-        reloadCard(){
-            //alterar quando tiver api
-            window.location.reload()
+        async reloadCard(){
+            this.consultasMarcadas = "Carregando..."
+            this.today = "Carregando..."
+            this.getToday()
+            await this.loadData()
         },
-        today(){
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0');
-            var yyyy = today.getFullYear();
-            return (today = dd + '/' + mm + '/' + yyyy) 
+        getToday(){
+            this.today = new Date();
+            var dd = String(this.today.getDate()).padStart(2, '0');
+            var mm = String(this.today.getMonth() + 1).padStart(2, '0');
+            var yyyy = this.today.getFullYear();
+            this.today = dd + '-' + mm + '-' + yyyy
         },
         redirect(location){
             this.$router.push({path: location});
+        },
+        async loadData(){
+            try{
+            //this.consultasMarcadas = await apiClient.getAgendamentosByFilter()
+            this.consultasMarcadas = "0"
+            }catch(e){
+                notification.sendNotification('Ocorreu um erro ao buscar as consultas, tente novamente!', 'is-danger', 5000)
+            }
         }
+    },
+    async created(){
+        this.getToday()
+        await this.loadData()
     }
 };
 </script>

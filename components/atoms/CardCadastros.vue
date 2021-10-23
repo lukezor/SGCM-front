@@ -7,32 +7,55 @@
         </div>
       </div>
       <div class="infosWrapper">
-          <p> Total de clientes cadastrados: {{countCadastros}} </p>
-          <p> Novos clientes hoje: {{cadastrosHoje}} </p>
+          <p> Total de usuários cadastrados: {{countCadastros}} </p>
+          <p> Novos usuários hoje: {{cadastrosHoje}} </p>
       </div>
       <div class="buttonArea">
           <b-button @click.native="redirect('/cadastro/')" class="leftButton" type="is-primary">Cadastrar novo usuário</b-button>
-          <b-button @click.native="redirect('/cadastro/listagem')" class="rightButton" type="is-primary is-light">Listagem de cadastros</b-button>
+          <b-button v-if="hasListagem" @click.native="redirect('/cadastro/listagem')" class="rightButton" type="is-primary is-light">Listagem de cadastros</b-button>
       </div>
   </div>
 </template>
 
 <script>
+import apiClient from '~/utils/apiClient.js'
+import notification from '~/utils/notification.js'
 export default {
     data(){
         return{
-            countCadastros: "0",
-            cadastrosHoje: "0",
+            countCadastros: "Carregando...",
+            cadastrosHoje: "Carregando...",
         }
     },
+    props:{
+        hasListagem:{
+            type:Boolean,
+            required:false,
+            default:true
+        },
+    },
     methods:{
-        reloadCard(){
-            //alterar quando tiver api
-            window.location.reload()
+        async reloadCard(){
+            this.countCadastros = "Carregando..."
+            this.cadastrosHoje = "Carregando..."
+            await this.loadData()
         },
         redirect(location){
             this.$router.push({path: location});
+        },
+        async loadData(){
+            try{
+            //this.countCadastros = await apiClient.countTotalCadastros()
+            //this.cadastrosHoje = await apiClient.countTotalCadastrosByFilter()
+            this.countCadastros = "0"
+            this.cadastrosHoje = "0"
+            }catch(e){
+                notification.sendNotification('Ocorreu um erro ao consultar os cadastros, tente novamente!', 'is-danger', 5000)
+            }
         }
+    },
+    async created(){
+        await this.loadData()
     }
 };
 </script>

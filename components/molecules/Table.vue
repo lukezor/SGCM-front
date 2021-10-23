@@ -1,8 +1,8 @@
 <template>
         <b-table 
             :data="data"
-            :paginated="true"
-            :per-page="8"
+            :paginated="paginated"
+            :per-page="perPage"
             :paginated-position="'bottom'">
             <template v-for="column in columns">
                 <b-table-column :key="column.id" v-bind="column">
@@ -35,6 +35,11 @@
                                 <b-button class="is-primary is-outlined" icon-right="close" @click="unconfirm(props.row.id)" :disabled="isDisabledUnconfirm"/>
                             </div>
                         </template>
+                        <template v-else-if="column.field == 'crud-options-finish'">
+                            <div class="editar">
+                                <b-button class="is-primary is-outlined" icon-right="alarm-check" @click="finish(props.row.id)" :disabled="isDisabledConfirm"/>
+                            </div>
+                        </template>
                         <template v-else>
                             {{ props.row[column.field] }}
                         </template>
@@ -54,6 +59,16 @@
             columns: {
                 required: true,
                 type: Array
+            },
+            paginated: {
+                required: false,
+                type: Boolean,
+                default: true,
+            },
+            perPage: {
+                required: false,
+                type: Number,
+                default: 7,
             },
             path:{
                 required: true,
@@ -76,6 +91,9 @@
             },
             unconfirm(id){
                 console.log("Cancelando: ",id)
+            },
+            finish(id){
+                console.log("Terminando: ",id)
             }
         }
     }

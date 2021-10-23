@@ -90,15 +90,6 @@ export default {
         if (this.value) {
             this.innerValue = this.value
         }
-
-        if (this.alinhamentoDireita) {
-            this.classe += ' alinhamento-direita'
-        }
-
-        if (this.larguraColuna) {
-            this.classe += ' largura-coluna'
-        }
-
         if (this.upperCase == 0) {
             this.classe = 'notransform'
         } else if (this.upperCase == 2) {
@@ -129,14 +120,6 @@ export default {
     input[type=number] { 
         -moz-appearance: textfield;
         appearance: textfield;
-    }
-
-    .alinhamento-direita {
-        text-align: right;
-    }
-
-    .largura-coluna {
-        min-width: 120px;
     }
 
 </style>

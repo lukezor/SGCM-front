@@ -14,16 +14,16 @@
                 <ValidationObserver ref="observer">
                 <div class="columns">
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="text" label="Nome *" v-model="user.first_name" :disabled="user.id"/>
+                        <CustomInput rules="required|max:100" type="text" label="Nome *" v-model="user.first_name"/>
                     </div>
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="text" label="Sobrenome *" v-model="user.last_name" :disabled="user.id"/>
+                        <CustomInput rules="required|max:100" type="text" label="Sobrenome *" v-model="user.last_name"/>
                     </div>
                 </div>
 
                 <div class="columns">
                     <div class="column is-full-mobile is-half-tablet is-8-desktop">
-                        <CustomInput rules="required|max:100" type="email" label="Endereço de e-mail *" v-model="user.email"/>
+                        <CustomInput rules="required|max:100" type="email" label="Endereço de e-mail *" v-model="user.email" :upperCase="2"/>
                     </div>
                 </div>
 
@@ -47,12 +47,12 @@
                     </div>
                 </div>
 
-                <div class="columns">
+                <div v-if="user.id == null" class="columns">
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Senha *" v-model="user.password"/>
+                        <CustomInput rules="required|max:100" type="password" label="Senha *" v-model="user.password" :upperCase="0"/>
                     </div>
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Confirmação de senha *" v-model="passConfirmation"/>
+                        <CustomInput rules="required|max:100" type="password" label="Confirmação de senha *" v-model="passConfirmation" :upperCase="0"/>
                     </div>
                 </div>
                 </ValidationObserver>
@@ -89,12 +89,14 @@
             return {
                 user: {
                     id: this.$route.params.id,
-                    user_type: '2',
+                    user_type: null,
                     email: null,
                     password: null,
                     username: null,
                     first_name: null,
-                    last_name: null
+                    last_name: null,
+                    is_superuser: false,
+                    is_staff: false
                 },
                 passConfirmation: null
             }
@@ -103,24 +105,44 @@
             sendError(err) {
                 notification.sendNotification(err, 'is-danger', 5000)
             },
+            sendSuccess(msg){
+                notification.sendNotification(msg, 'is-success', 5000)
+            },
             async salvar() {
                 console.log(this.user)
-                if (this.passConfirmation !== this.user.password)
-                    notification.sendNotification('As senhas não conferem!', 'is-danger', 5000)
-                else try{
+                if (this.passConfirmation !== this.user.password){
+                    this.sendError('As senhas não conferem!')
+                    return
+                }
+                else if(this.user.user_type == 'ADMIN'){
+                    this.user.is_superuser = true
+                    this.user.is_staff = true
+                }
+                try{
                     await apiClient.createUser(this.user)
                     }catch(err){
                         this.sendError(err)
+                        return
                     }
+                    this.sendSuccess('Usuário criado com sucesso!')
+                    this.retornar()
             },
             async alterar() {
-                if (this.passConfirmation !== this.user.password)
-                    notification.sendNotification('As senhas não conferem!', 'is-danger', 5000)
-                else try{
-                    await apiClient.updateUser(this.user)
+                const objTratado = {
+                    id: this.user.id,
+                    email: this.user.email,
+                    user_type: this.user.user_type,
+                    first_name: this.user.first_name,
+                    last_name: this.user.last_name,
+                }
+                try{
+                    await apiClient.updateUser(objTratado)
                     }catch(err){
                         this.sendError(err)
+                        return
                     }
+                    this.sendSuccess('Usuário alterado com sucesso!')
+                    this.retornar()
             },
             retornar(){
                 this.$router.push('/cadastro/listagem')
@@ -132,8 +154,12 @@
                 const loadingComponent = this.$buefy.loading.open()
                 try {    
                     this.user = await apiClient.getUserById(this.user.id)
+                    if(this.user.user_type == 'ADMIN'){
+                        this.user.is_superuser = true
+                        this.user.is_staff = true
+                    }
                 } catch (err) {
-                    notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+                    this.sendError('Ocorreu um erro ao buscar, tente novamente!')
                 } finally {
                     loadingComponent.close()
                 }

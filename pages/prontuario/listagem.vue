@@ -45,7 +45,7 @@ export default {
                     centered: true
                 },
                 {
-                    field:'crud-options-confirm-edit',
+                    field:'crud-options-edit',
                     label:'Acoes',
                     centered: true
                 }

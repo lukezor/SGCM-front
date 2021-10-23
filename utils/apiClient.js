@@ -118,8 +118,12 @@ class ApiClient {
         return result
     }
 
-    checkSession() {
+    async checkSession() {
         return internalGet(urljoin('auth', 'users', 'me/'))
+    }
+
+    async changePassword(payload){
+        return internalPost(urljoin('auth','users','set_password/'),payload)
     }
 
     async logout(){
