@@ -11,20 +11,26 @@
   },
   "dependencies": {
     "axios": "^0.21.0",
+    "chart.js": "2.8",
     "cleave.js": "^1.6.0",
     "core-js": "^3.6.5",
-    "node-sass": "^5.0.0",
     "nuxt": "^2.14.6",
     "nuxt-buefy": "^0.4.3",
+    "nuxt-material-design-icons": "^1.0.4",
     "nuxt-vuex-localstorage": "^1.2.7",
+    "query-string": "^7.0.1",
+    "sass": "^1.42.1",
     "sass-loader": "^10.1.0",
-    "url-join": "^4.0.1"
+    "url-join": "^4.0.1",
+    "vee-validate": "^3.4.3",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^26.5.0",
     "jest": "^26.5.0",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^3.0.4",
+    "@nuxtjs/moment": "^1.6.1"
   }
 }

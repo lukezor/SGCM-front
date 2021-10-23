@@ -1,0 +1,105 @@
+<template>
+  <div class="padding">
+      <div class="titleWrapper">
+        <p class="cardTitle">Agendamento de Consultas</p>
+        <div @click.native="reloadCard()" class="reloadButton">
+            <b-icon class="reloadIcon" @click.native="reloadCard()" icon="reload"/>
+        </div>
+      </div>
+      <div class="infosWrapper">
+          <p> Data: {{today}} </p>
+          <p> Consultas marcadas hoje: {{consultasMarcadas}} </p>
+      </div>
+      <div class="buttonArea">
+          <b-button @click.native="redirect('/agendamento/')" class="leftButton" type="is-primary">Novo agendamento</b-button>
+          <b-button @click.native="redirect('/agendamento/listagem')" class="rightButton" type="is-primary is-light">Visualizar agendamentos</b-button>
+      </div>
+  </div>
+</template>
+
+<script>
+import apiClient from '~/utils/apiClient.js'
+import notification from '~/utils/notification.js'
+export default {
+    data(){
+        return{
+            today: "Carregando...",
+            consultasMarcadas: "Carregando...",
+        }
+    },
+    methods:{
+        async reloadCard(){
+            this.consultasMarcadas = "Carregando..."
+            this.today = "Carregando..."
+            this.getToday()
+            await this.loadData()
+        },
+        getToday(){
+            this.today = new Date();
+            var dd = String(this.today.getDate()).padStart(2, '0');
+            var mm = String(this.today.getMonth() + 1).padStart(2, '0');
+            var yyyy = this.today.getFullYear();
+            this.today = dd + '-' + mm + '-' + yyyy
+        },
+        redirect(location){
+            this.$router.push({path: location});
+        },
+        async loadData(){
+            try{
+            //this.consultasMarcadas = await apiClient.getAgendamentosByFilter()
+            this.consultasMarcadas = "0"
+            }catch(e){
+                notification.sendNotification('Ocorreu um erro ao buscar as consultas, tente novamente!', 'is-danger', 5000)
+            }
+        }
+    },
+    async created(){
+        this.getToday()
+        await this.loadData()
+    }
+};
+</script>
+<style lang="scss" scoped>
+.padding{
+    padding:25px;
+    width:100%;
+    height: 100%;
+    position: relative;
+}
+.titleWrapper{
+    display:flex;
+    flex-direction: row;
+    align-items:center;
+}
+.cardTitle{
+    color:black;
+    font-size:18px;
+    font-weight: 600;
+}
+.reloadButton{
+    background-color: #4d66b083;
+    cursor:pointer;
+    width: 40px;
+    height: 40px;
+    margin-left:auto;
+    border-radius: 100px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+}
+.icon{
+    color:#4D66B0
+}
+.infosWrapper{
+    display:flex;
+    height: 50%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.buttonArea{
+    display:flex;
+    justify-content: space-around;
+}
+</style>
