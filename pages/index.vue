@@ -22,6 +22,9 @@
     <div v-if="userType == 'MEDICO'" class="container-left-bottom">
       <CardProntuarios :hasListagem="true"/>
     </div>
+    <div v-if="userType == 'PACIENTE'" class="container-left-bottom">
+      <CardProntuarios :hasListagem="false"/>
+    </div>
   </div>
   <div v-if="userLoaded" class="container-right">
     <!-- Direito Full -->
@@ -37,7 +40,7 @@
     <div v-if="userType == 'ADMIN'" class="container-right-bottom">
       <CardRelatorios/>
     </div>
-    <div v-if="userType == 'SECRETARIO'" class="container-right-bottom">
+    <div v-if="userType == 'SECRETARIO' || userType == 'PACIENTE'" class="container-right-bottom">
       <CardConfirmacoes/>
     </div>
   </div>
