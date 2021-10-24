@@ -146,6 +146,12 @@ class ApiClient {
     async updateUser(user) {
         return internalPut(urljoin('auth','users', user.id.toString() + '/'), user)
     }
+
+    // INFOS PESSOAIS
+
+    async getAllPersonalInfos(){
+        return internalGet(urljoin('api', 'infospessoais/'))
+    }
 }
 
 
