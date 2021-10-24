@@ -8,7 +8,7 @@
         <Table :data="dados" :columns="colunas" :path="''"/>
       </div>
       <div class="buttons">
-        <b-button @click.native="redirect('/cadastro/')" type="is-primary">Cadastrar informações pessoais</b-button>
+        <b-button @click.native="redirect('/infospessoais/')" type="is-primary">Cadastrar informações pessoais</b-button>
       </div>
     </div>
   </div>

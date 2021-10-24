@@ -2,65 +2,98 @@
     <div class = "main-container">
         <div class= "padding-geral">
             <div class="titulo">
-                <div v-if="user.id == null">
-                    <h1 class="title"> Adicionar Usuário </h1>
-                </div>
-                <div v-else>
-                    <h1 class="title"> Alterar Usuário </h1>
-                </div>
+                <h1 class="title"> Cadastrar Informações Pessoais </h1>
             </div>
 
             <div class ="padding-interno">
                 <ValidationObserver ref="observer">
-                <div class="columns">
-                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="text" label="Nome *" v-model="user.first_name"/>
-                    </div>
-                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="text" label="Sobrenome *" v-model="user.last_name"/>
-                    </div>
-                </div>
 
-                <div class="columns">
-                    <div class="column is-full-mobile is-half-tablet is-8-desktop">
-                        <CustomInput rules="required|max:100" type="email" label="Endereço de e-mail *" v-model="user.email" :upperCase="2"/>
+                    <div class="columns">
+                        <div v-if="!infos.id" class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomSelect
+                                    :itens="users"
+                                    label="Usuário *" 
+                                    itemValue="id"
+                                    itemText="username"
+                                    v-model="infos.id_paciente"
+                            />
+                        </div>
+                        <div v-else class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput rules="required|max:150" type="text" label="Usuário *" :upperCase="0" :disabled="true" v-model="placeholder"/>
+                        </div>
                     </div>
-                </div>
 
-                <div class="columns">
-                    <div class="column is-full-mobile is-one-quarter-tablet is-4-desktop">
-                        <CustomInput  rules="required|max:100" type="text" label="Login *" v-model="user.username" :disabled="user.id" :upperCase="2"/>
-                    </div>
-                    <div class="column is-full-mobile is-one-quarter-tablet is-4-desktop">
-                        <CustomSelect
-                            :itens="[
-                                    {value:'ADMIN', text:'Administrador'}, 
-                                    {value:'SECRETARIO', text:'Secretário'},
-                                    {value:'PACIENTE', text:'Paciente'},
-                                    {value:'MEDICO', text:'Médico'}
-                                ]"
-                            label="Tipo de usuário *" 
-                            itemValue="value"
-                            itemText="text"
-                            v-model="user.user_type"
-                        />
-                    </div>
-                </div>
+                    <div v-if="infos.id_paciente">   
+                        <div class="columns">
+                            <div class="column is-full-mobile is-half-tablet is-6-desktop">
+                                <CustomInput rules="required|max:150" type="text" label="Nome completo *" v-model="infos.nome_completo"/>
+                            </div>
+                            <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                                <CustomSelect
+                                    :itens="[
+                                        {value:'M',label:'Masculino'},
+                                        {value:'F',label:'Feminino'}
+                                    ]"
+                                    rules="required"
+                                    label="Sexo *" 
+                                    itemValue="value"
+                                    itemText="label"
+                                    v-model="infos.sexo"
+                            />
+                            </div>
+                        </div>
 
-                <div v-if="user.id == null" class="columns">
-                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Senha *" v-model="user.password" :upperCase="0"/>
+                        <div class="columns">
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="required|max:150" type="text" label="Profissao *" v-model="infos.profissao"/>
+                            </div>
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInputMask
+                                    rules="required"
+                                    type="text"
+                                    label="CPF *"
+                                    v-model="infos.documento"
+                                    :options="maskCPF"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="required|max:150" type="text" label="Naturalidade *" v-model="infos.naturalidade"/>
+                            </div>
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInputMask
+                                    rules="required"
+                                    type="text"
+                                    label="Telefone *"
+                                    v-model="infos.telefone"
+                                    :options="maskTelefone"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInputMask
+                                    rules="required"
+                                    type="text"
+                                    label="Data Nascimento *"
+                                    v-model="data_de_nascimento" :options="maskDataNascimento"
+                                    @input="formataData()"
+                                />
+                            </div>
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="required|max:15" type="text" label="Cor/Raça *" v-model="infos.cor_raca"/>
+                            </div>
+                        </div>
                     </div>
-                    <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Confirmação de senha *" v-model="passConfirmation" :upperCase="0"/>
-                    </div>
-                </div>
                 </ValidationObserver>
             </div>
 
             <div class="botoes">
-                <b-button v-if="user.id == null" @click.native="salvar()" type="is-primary">Cadastrar novo usuário</b-button>
-                <b-button v-else @click.native="alterar()" type="is-primary">Alterar usuário</b-button>
+                <b-button v-if="!infos.id" @click.native="salvar()" type="is-primary">Cadastrar informações pessoais</b-button>
+                <b-button v-else @click.native="alterar()" type="is-primary">Alterar informações pessoais</b-button>
                 <b-button @click.native="retornar()" type="is-primary-light"> Voltar </b-button>
             </div>
 
@@ -71,6 +104,7 @@
 <script>
     import { ValidationObserver } from 'vee-validate'
     import CustomInput from '~/components/atoms/CustomInput.vue'
+    import CustomInputMask from '~/components/atoms/CustomInputMask.vue'
     import CustomSelect from '~/components/atoms/CustomSelect.vue'
     import notification from '~/utils/notification'
     import apiClient from '~/utils/apiClient'
@@ -78,87 +112,135 @@
     export default {
 
         middleware: 'authenticated',
-        name: 'CadastroUsuário',
+        name: 'CadastrarInfos',
 
         components: {
             ValidationObserver,
             CustomInput,
-            CustomSelect
+            CustomSelect,
+            CustomInputMask
         },
         data(){
             return {
-                user: {
-                    id: this.$route.params.id,
-                    user_type: null,
-                    email: null,
-                    password: null,
-                    username: null,
-                    first_name: null,
-                    last_name: null,
-                    is_superuser: false,
-                    is_staff: false
+                placeholder:'Carregando...',
+                infos: {
+                    id:this.$route.params.id,
+                    id_paciente: null,
+                    nome_completo: null,
+                    sexo:null,
+                    profissao:null,
+                    documento:null,
+                    naturalidade:null,
+                    telefone:null,
+                    data_nascimento:null,
+                    cor_raca:null,
                 },
-                passConfirmation: null
+                data_de_nascimento:null,
+                users:[],
+                maskCPF: {
+                    blocks: [3, 3, 3, 2],
+                    delimiters: ['.', '.', '-'],
+                    numericOnly: true
+                },
+                maskTelefone: {
+                    blocks: [0,2,0,5,4],
+                    delimiters: ['(', ')',' ','-'],
+                    numericOnly: true
+                },
+                maskDataNascimento: {
+                    date: true,
+                    datePattern: ['d', 'm', 'Y'],
+                    delimiter: '/',
+                    dateMin: '1900-01-01',
+                    dateMax: '2022-01-01',
+                },
+                flag_data_nascimento: false,
             }
         },
         methods:{
             sendError(err) {
-                notification.sendNotification(err, 'is-danger', 5000)
+                notification.sendNotification(err, 'is-danger', 8000)
             },
             sendSuccess(msg){
-                notification.sendNotification(msg, 'is-success', 5000)
+                notification.sendNotification(msg, 'is-success', 8000)
             },
             async salvar() {
-                console.log(this.user)
-                if (this.passConfirmation !== this.user.password){
-                    this.sendError('As senhas não conferem!')
-                    return
-                }
-                else if(this.user.user_type == 'ADMIN'){
-                    this.user.is_superuser = true
-                    this.user.is_staff = true
+                console.log(this.infos)
+                if(this.flag_data_nascimento){
+                    this.sendError('Data de nascimento inválida!')
+                    return;
                 }
                 try{
-                    await apiClient.createUser(this.user)
+                    await apiClient.createInfos(this.infos)
                     }catch(err){
                         this.sendError(err)
                         return
                     }
-                    this.sendSuccess('Usuário criado com sucesso!')
+                    this.sendSuccess('Informações pessoais atualizadas com sucesso!')
                     this.retornar()
             },
             async alterar() {
-                const objTratado = {
-                    id: this.user.id,
-                    email: this.user.email,
-                    user_type: this.user.user_type,
-                    first_name: this.user.first_name,
-                    last_name: this.user.last_name,
+                console.log(this.infos)
+                if(this.flag_data_nascimento){
+                    this.sendError('Data de nascimento inválida!')
+                    return;
                 }
                 try{
-                    await apiClient.updateUser(objTratado)
+                    await apiClient.updateInfos(this.infos)
                     }catch(err){
                         this.sendError(err)
                         return
                     }
-                    this.sendSuccess('Usuário alterado com sucesso!')
+                    this.sendSuccess('Informações pessoais atualizadas com sucesso!')
                     this.retornar()
             },
             retornar(){
-                this.$router.push('/cadastro/listagem')
+                this.$router.push('/infospessoais/listagem')
+            },
+            formataData(){
+                if(this.data_de_nascimento.length == 8){
+                    let dd = this.data_de_nascimento[0]+this.data_de_nascimento[1]
+                    let mm = this.data_de_nascimento[2]+this.data_de_nascimento[3]
+                    let yyyy = this.data_de_nascimento[4]+this.data_de_nascimento[5]+this.data_de_nascimento[6]+this.data_de_nascimento[7]
+                    this.infos.data_nascimento = yyyy+"-"+mm+"-"+dd
+                    if(yyyy < 1900 || yyyy > 2022 || mm < 1 || mm > 12 || dd < 1 || dd > 31){
+                        this.infos.data_nascimento = null
+                        notification.sendNotification('Data de nascimento inválida!', 'is-danger', 8000)
+                        this.flag_data_nascimento = true;
+                    }
+                    else{
+                        this.flag_data_nascimento = false;
+                    }
+                    console.log("depois",this.infos.data_nascimento)
+                } 
+            },
+            formataDataReverso(data){
+                let dd = data[8]+data[9]
+                let mm = data[5]+data[6]
+                let yyyy = data[0]+data[1]+data[2]+data[3]
+                return dd+'/'+mm+'/'+yyyy
             }
         },
 
         async created() {
-            if (this.user.id) {
-                const loadingComponent = this.$buefy.loading.open()
+            const loadingComponent = this.$buefy.loading.open()
+            if(!this.infos.id){
                 try {    
-                    this.user = await apiClient.getUserById(this.user.id)
-                    if(this.user.user_type == 'ADMIN'){
-                        this.user.is_superuser = true
-                        this.user.is_staff = true
-                    }
+                    this.users = await apiClient.getPacientesSemInfo()
                 } catch (err) {
+                    this.sendError('Ocorreu um erro ao buscar, tente novamente!')
+                } finally {
+                    loadingComponent.close()
+                }
+            }
+            else{
+                try {
+                    this.infos = await apiClient.getInfosById(this.infos.id)
+                    let placeholder = await apiClient.getUserById(this.infos.id_paciente)
+                    this.placeholder = placeholder.username
+                    this.data_de_nascimento = this.formataDataReverso(this.infos.data_nascimento)
+                } catch (err) {
+                    console.log(err)
                     this.sendError('Ocorreu um erro ao buscar, tente novamente!')
                 } finally {
                     loadingComponent.close()

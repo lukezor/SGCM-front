@@ -131,12 +131,13 @@ class ApiClient {
     }
 
     // USERS
+
     async getAllUsers(){
         return internalGet(urljoin('api', 'users/'))
     }
 
     async getUserById(userId) {
-        return internalGet(urljoin('auth', 'users', userId.toString() + '/'))
+        return internalGet(urljoin('api', 'users', userId.toString() + '/'))
     }
 
     async createUser(user) {
@@ -151,6 +152,23 @@ class ApiClient {
 
     async getAllPersonalInfos(){
         return internalGet(urljoin('api', 'infospessoais/'))
+    }
+
+    async getInfosById(userId) {
+        return internalGet(urljoin('api', 'infospessoais', userId.toString() + '/'))
+    }
+
+    async createInfos(infos) {
+        return internalPost('api/infospessoais/', infos)
+    }
+
+    async updateInfos(infos) {
+        return internalPut(urljoin('api','infospessoais', infos.id.toString() + '/'), infos)
+    }
+
+    async getPacientesSemInfo(){
+        var params = "?info_cadastrada=false&user_type=PACIENTE"
+        return internalGet(urljoin('api','users','/',params))
     }
 }
 

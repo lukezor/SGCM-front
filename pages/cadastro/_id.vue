@@ -96,7 +96,8 @@
                     first_name: null,
                     last_name: null,
                     is_superuser: false,
-                    is_staff: false
+                    is_staff: false,
+                    info_cadastrada: null,
                 },
                 passConfirmation: null
             }
@@ -157,6 +158,9 @@
                     if(this.user.user_type == 'ADMIN'){
                         this.user.is_superuser = true
                         this.user.is_staff = true
+                    }
+                    if(this.user.user_type == 'PACIENTE'){
+                        this.user.info_cadastrada = false
                     }
                 } catch (err) {
                     this.sendError('Ocorreu um erro ao buscar, tente novamente!')
