@@ -25,12 +25,14 @@ export default {
         return{
             today: "Carregando...",
             consultasMarcadas: "Carregando...",
+            formattedToday: "",
         }
     },
     methods:{
         async reloadCard(){
             this.consultasMarcadas = "Carregando..."
             this.today = "Carregando..."
+            this.formattedToday = "Carregando..."
             this.getToday()
             await this.loadData()
         },
@@ -40,14 +42,15 @@ export default {
             var mm = String(this.today.getMonth() + 1).padStart(2, '0');
             var yyyy = this.today.getFullYear();
             this.today = dd + '-' + mm + '-' + yyyy
+            this.formattedToday = yyyy + '-' + mm + '-' + dd 
         },
         redirect(location){
             this.$router.push({path: location});
         },
         async loadData(){
             try{
-            //this.consultasMarcadas = await apiClient.getAgendamentosByFilter()
-            this.consultasMarcadas = "0"
+            this.consultasMarcadas = await apiClient.getAgendamentosToday(this.formattedToday)
+            this.consultasMarcadas = this.consultasMarcadas.length
             }catch(e){
                 notification.sendNotification('Ocorreu um erro ao buscar as consultas, tente novamente!', 'is-danger', 5000)
             }

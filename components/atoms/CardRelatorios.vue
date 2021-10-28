@@ -19,7 +19,7 @@
 export default {
     data(){
         return{
-            countRelatorios: "0",
+            countRelatorios: "5",
         }
     },
     methods:{

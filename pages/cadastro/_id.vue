@@ -115,9 +115,12 @@
                     this.sendError('As senhas não conferem!')
                     return
                 }
-                else if(this.user.user_type == 'ADMIN'){
+                if(this.user.user_type == 'ADMIN'){
                     this.user.is_superuser = true
                     this.user.is_staff = true
+                }
+                if(this.user.user_type == 'PACIENTE'){
+                    this.user.info_cadastrada = false
                 }
                 try{
                     await apiClient.createUser(this.user)
@@ -125,8 +128,8 @@
                         this.sendError(err)
                         return
                     }
-                    this.sendSuccess('Usuário criado com sucesso!')
-                    this.retornar()
+                this.sendSuccess('Usuário criado com sucesso!')
+                this.retornar()
             },
             async alterar() {
                 const objTratado = {
@@ -158,9 +161,6 @@
                     if(this.user.user_type == 'ADMIN'){
                         this.user.is_superuser = true
                         this.user.is_staff = true
-                    }
-                    if(this.user.user_type == 'PACIENTE'){
-                        this.user.info_cadastrada = false
                     }
                 } catch (err) {
                     this.sendError('Ocorreu um erro ao buscar, tente novamente!')

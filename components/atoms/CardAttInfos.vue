@@ -11,7 +11,7 @@
           <p> Pacientes sem informações pessoais: {{countNoInfo}} </p>
       </div>
       <div class="buttonArea">
-          <b-button @click.native="redirect('/cadastro/')" class="leftButton" type="is-primary">Atualizar informações pessoais</b-button>
+          <b-button @click.native="redirect('/infospessoais/')" class="leftButton" type="is-primary">Atualizar informações pessoais</b-button>
       </div>
   </div>
 </template>
@@ -37,10 +37,10 @@ export default {
         },
         async loadData(){
             try{
-            //this.cadastrosHoje = await apiClient.countTotalCadastrosByFilter()
-            //this.countNoInfo = await apiClient.countTotalInfoPessoalByFilter()
-            this.countCadastros = "0"
-            this.countNoInfo = "0"
+            this.countNoInfo = await apiClient.getPacientesSemInfo()
+            this.countNoInfo = this.countNoInfo.length
+            this.countCadastros = await apiClient.getUserByType("PACIENTE")
+            this.countCadastros = this.countCadastros.length
             }catch(e){
                 notification.sendNotification('Ocorreu um erro ao consultar os cadastros, tente novamente!', 'is-danger', 5000)
             }

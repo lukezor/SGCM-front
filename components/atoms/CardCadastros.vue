@@ -25,6 +25,7 @@ export default {
         return{
             countCadastros: "Carregando...",
             cadastrosHoje: "Carregando...",
+            today:""
         }
     },
     props:{
@@ -45,16 +46,24 @@ export default {
         },
         async loadData(){
             try{
-            //this.countCadastros = await apiClient.countTotalCadastros()
-            //this.cadastrosHoje = await apiClient.countTotalCadastrosByFilter()
-            this.countCadastros = "0"
-            this.cadastrosHoje = "0"
+            this.countCadastros = await apiClient.getAllUsers()
+            this.countCadastros = this.countCadastros.length
+            this.cadastrosHoje = await apiClient.getAllUsersToday(this.today)
+            this.cadastrosHoje = this.cadastrosHoje.length
             }catch(e){
                 notification.sendNotification('Ocorreu um erro ao consultar os cadastros, tente novamente!', 'is-danger', 5000)
             }
-        }
+        },
+        getToday(){
+            this.today = new Date();
+            var dd = String(this.today.getDate()).padStart(2, '0');
+            var mm = String(this.today.getMonth() + 1).padStart(2, '0');
+            var yyyy = this.today.getFullYear();
+            this.today = yyyy + '-' + mm + '-' + dd
+        },
     },
     async created(){
+        this.getToday()
         await this.loadData()
     }
 };

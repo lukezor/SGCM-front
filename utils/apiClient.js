@@ -140,12 +140,22 @@ class ApiClient {
         return internalGet(urljoin('api', 'users', userId.toString() + '/'))
     }
 
+    async getUserByType(type) {
+        var params = "?user_type=" + type
+        return internalGet(urljoin('api','users','/',params))
+    }
+
+    async getAllUsersToday(today) {
+        var params = "?date_joined=" + today
+        return internalGet(urljoin('api','users','/',params))
+    }
+
     async createUser(user) {
         return internalPost('auth/users/', user)
     }
 
     async updateUser(user) {
-        return internalPut(urljoin('auth','users', user.id.toString() + '/'), user)
+        return internalPut(urljoin('api','users', user.id.toString() + '/'), user)
     }
 
     // INFOS PESSOAIS
@@ -166,9 +176,20 @@ class ApiClient {
         return internalPut(urljoin('api','infospessoais', infos.id.toString() + '/'), infos)
     }
 
+    async updateUserInfosCadastradas(user) {
+        return internalPut(urljoin('api','userinfo', user.id.toString() + '/'), user)
+    }
+
     async getPacientesSemInfo(){
         var params = "?info_cadastrada=false&user_type=PACIENTE"
         return internalGet(urljoin('api','users','/',params))
+    }
+
+    // Agendamentos
+
+    async getAgendamentosToday(today) {
+        var params = "?data=" + today
+        return internalGet(urljoin('api','agendamentos','/',params))
     }
 }
 

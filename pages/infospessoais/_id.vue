@@ -166,12 +166,17 @@
             },
             async salvar() {
                 console.log(this.infos)
+                const objTratado={
+                    id:this.infos.id_paciente,
+                    info_cadastrada:true,
+                }
                 if(this.flag_data_nascimento){
                     this.sendError('Data de nascimento inválida!')
                     return;
                 }
                 try{
                     await apiClient.createInfos(this.infos)
+                    await apiClient.updateUserInfosCadastradas(objTratado)
                     }catch(err){
                         this.sendError(err)
                         return
@@ -181,12 +186,17 @@
             },
             async alterar() {
                 console.log(this.infos)
+                const objTratado={
+                    id:this.infos.id_paciente,
+                    info_cadastrada:true,
+                }
                 if(this.flag_data_nascimento){
                     this.sendError('Data de nascimento inválida!')
                     return;
                 }
                 try{
                     await apiClient.updateInfos(this.infos)
+                    await apiClient.updateUserInfosCadastradas(objTratado)
                     }catch(err){
                         this.sendError(err)
                         return
