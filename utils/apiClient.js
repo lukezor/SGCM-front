@@ -168,6 +168,11 @@ class ApiClient {
         return internalGet(urljoin('api', 'infospessoais', userId.toString() + '/'))
     }
 
+    async getMyPersonalInfo(userId) {
+        var params = "?id_paciente="+userId
+        return internalGet(urljoin('api','infospessoais','/',params))
+    }
+
     async createInfos(infos) {
         return internalPost('api/infospessoais/', infos)
     }
@@ -190,6 +195,24 @@ class ApiClient {
     async getAgendamentosToday(today) {
         var params = "?data=" + today
         return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getMyAgendamentosToday(today,id) {
+        // Pegar os agendamentos de hoje para o paciente que está usando o sistema
+        var params = "?data=" + today + "&id_paciente="+ id
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getMyConsultasToday(today,id) {
+        // Pegar os agendamentos de hoje para o medico que está usando o sistema
+        var params = "?data=" + today + "&id_medico="+ id
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    // Prontuários
+
+    async getProntuariosByQuery(query){
+        return internalGet(urljoin('api','prontuarios','/',query))
     }
 }
 

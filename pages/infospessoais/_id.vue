@@ -9,7 +9,7 @@
                 <ValidationObserver ref="observer">
 
                     <div class="columns">
-                        <div v-if="!infos.id" class="column is-full-mobile is-half-tablet is-4-desktop">
+                        <div v-if="!infos.id && userType!='PACIENTE'" class="column is-full-mobile is-half-tablet is-4-desktop">
                             <CustomSelect
                                     :itens="users"
                                     label="Usuário *" 
@@ -17,6 +17,9 @@
                                     itemText="username"
                                     v-model="infos.id_paciente"
                             />
+                        </div>
+                        <div v-else-if="!infos.id && userType=='PACIENTE'" class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput rules="required|max:150" type="text" label="Usuário *" :upperCase="0" :disabled="true" v-model="myUser"/>
                         </div>
                         <div v-else class="column is-full-mobile is-half-tablet is-4-desktop">
                             <CustomInput rules="required|max:150" type="text" label="Usuário *" :upperCase="0" :disabled="true" v-model="placeholder"/>
@@ -108,6 +111,7 @@
     import CustomSelect from '~/components/atoms/CustomSelect.vue'
     import notification from '~/utils/notification'
     import apiClient from '~/utils/apiClient'
+    import $store from '~/store/userData';
 
     export default {
 
@@ -137,6 +141,7 @@
                 },
                 data_de_nascimento:null,
                 users:[],
+                myUser:"",
                 maskCPF: {
                     blocks: [3, 3, 3, 2],
                     delimiters: ['.', '.', '-'],
@@ -155,6 +160,11 @@
                     dateMax: '2022-01-01',
                 },
                 flag_data_nascimento: false,
+            }
+        },
+        computed:{
+            userType(){
+                return $store.state.user.user_type
             }
         },
         methods:{
@@ -205,7 +215,8 @@
                     this.retornar()
             },
             retornar(){
-                this.$router.push('/infospessoais/listagem')
+                if(this.userType=='PACIENTE') this.$router.push('/')
+                else this.$router.push('/infospessoais/listagem')
             },
             formataData(){
                 if(this.data_de_nascimento.length == 8){
@@ -235,11 +246,18 @@
         async created() {
             const loadingComponent = this.$buefy.loading.open()
             if(!this.infos.id){
-                try {    
-                    this.users = await apiClient.getPacientesSemInfo()
-                } catch (err) {
-                    this.sendError('Ocorreu um erro ao buscar, tente novamente!')
-                } finally {
+                if(this.userType != "PACIENTE"){
+                    try {    
+                        this.users = await apiClient.getPacientesSemInfo()
+                    } catch (err) {
+                        this.sendError('Ocorreu um erro ao buscar, tente novamente!')
+                    } finally {
+                        loadingComponent.close()
+                    }
+                }
+                else{
+                    this.myUser = $store.state.user.username
+                    this.infos.id_paciente = $store.state.user.id
                     loadingComponent.close()
                 }
             }

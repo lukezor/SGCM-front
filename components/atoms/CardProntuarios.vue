@@ -11,7 +11,7 @@
       </div>
       <div class="buttonArea">
           <b-button v-if="hasCreate" @click.native="redirect('/cadastro/')" class="leftButton" type="is-primary">Cadastrar novo prontuário</b-button>
-          <b-button @click.native="redirect('/cadastro/listagem')" class="rightButton" type="is-primary is-light">Listagem de cadastros</b-button>
+          <b-button @click.native="redirect('/cadastro/listagem')" class="rightButton" type="is-primary is-light">Listagem de prontuários</b-button>
       </div>
   </div>
 </template>
@@ -19,6 +19,7 @@
 <script>
 import apiClient from '~/utils/apiClient.js'
 import notification from '~/utils/notification.js'
+import $store from '~/store/userData';
 export default {
     data(){
         return{
@@ -42,8 +43,11 @@ export default {
         },
         async loadData(){
             try{
-            //this.countCadastros = await apiClient.countTotalProntuariosByFilter()
-            this.countProntuarios = "0"
+                let query = $store.state.user.id
+                if($store.state.user.user_type == "MEDICO") query = "?id_medico="+query
+                else query= "?id_paciente="+query
+                this.countProntuarios = await apiClient.getProntuariosByQuery(query)
+                this.countProntuarios = this.countProntuarios.length
             }catch(e){
                 notification.sendNotification('Ocorreu um erro ao consultar os prontuários, tente novamente!', 'is-danger', 5000)
             }

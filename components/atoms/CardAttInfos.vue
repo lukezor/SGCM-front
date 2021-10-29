@@ -6,12 +6,16 @@
             <b-icon class="reloadIcon" @click.native="reloadCard()" icon="reload"/>
         </div>
       </div>
-      <div class="infosWrapper">
+      <div v-if="userType != 'PACIENTE'" class="infosWrapper">
           <p> Pacientes cadastrados: {{countCadastros}} </p>
           <p> Pacientes sem informações pessoais: {{countNoInfo}} </p>
       </div>
+      <div v-else class="infosWrapper">
+          <p> Informações cadastradas? <strong>{{isCadastrada}}</strong></p>
+      </div>
       <div class="buttonArea">
-          <b-button @click.native="redirect('/infospessoais/')" class="leftButton" type="is-primary">Atualizar informações pessoais</b-button>
+          <b-button v-if="userType == 'PACIENTE'" @click.native="handlePatientRedirect()" class="leftButton" type="is-primary">Atualizar minhas informações pessoais</b-button>
+          <b-button v-else @click.native="redirect('/infospessoais/listagem')" class="leftButton" type="is-primary">Atualizar informações pessoais de pacientes</b-button>
       </div>
   </div>
 </template>
@@ -19,12 +23,23 @@
 <script>
 import apiClient from '~/utils/apiClient.js'
 import notification from '~/utils/notification.js'
+import $store from '~/store/userData';
 export default {
     data(){
         return{
             countCadastros: "Carregando...",
             countNoInfo: "Carregando...",
+            my_id:""
         }
+    },
+    computed:{
+        userType(){
+            return $store.state.user.user_type
+        },
+        isCadastrada(){
+            if($store.state.user.info_cadastrada) return "Sim"
+            else return "Não"
+        },
     },
     methods:{
         async reloadCard(){
@@ -35,13 +50,23 @@ export default {
         redirect(location){
             this.$router.push({path: location});
         },
+        handlePatientRedirect(){
+            if(this.isCadastrada == 'Sim')
+                this.redirect('/infospessoais/'+this.my_id)
+            else{
+                this.redirect('/infospessoais/')   
+            }
+        },
         async loadData(){
             try{
             this.countNoInfo = await apiClient.getPacientesSemInfo()
             this.countNoInfo = this.countNoInfo.length
             this.countCadastros = await apiClient.getUserByType("PACIENTE")
             this.countCadastros = this.countCadastros.length
+            this.my_id = await apiClient.getMyPersonalInfo($store.state.user.id)
+            if(this.my_id[0]) this.my_id = this.my_id[0].id
             }catch(e){
+                console.log(e)
                 notification.sendNotification('Ocorreu um erro ao consultar os cadastros, tente novamente!', 'is-danger', 5000)
             }
         }

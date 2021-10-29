@@ -74,6 +74,7 @@
     import CustomSelect from '~/components/atoms/CustomSelect.vue'
     import notification from '~/utils/notification'
     import apiClient from '~/utils/apiClient'
+    import $store from '~/store/userData';
 
     export default {
 
@@ -149,7 +150,14 @@
                     this.retornar()
             },
             retornar(){
-                this.$router.push('/cadastro/listagem')
+                if (this.userType == "SECRETARIO") this.$router.push('/')
+                else this.$router.push('/cadastro/listagem')
+            }
+        },
+
+        computed:{
+            userType(){
+                return $store.state.user.user_type
             }
         },
 
