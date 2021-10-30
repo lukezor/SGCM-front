@@ -7,17 +7,55 @@
             <template v-for="column in columns">
                 <b-table-column :key="column.id" v-bind="column">
                     <template
-                        v-if="column.searchable && !column.numeric"
+                        v-if="column.searchable && !column.numeric && column.field != 'data' && column.field != 'status' && column.field != 'id_medico' && column.field != 'id_paciente'"
                         #searchable="props">
                         <b-input
                             v-model="props.filters[props.column.field]"
-                            placeholder="Search..."
+                            placeholder="Pesquisar..."
                             icon="magnify"
                             size="is-small" />
                     </template>
+                    <template
+                        v-else-if="column.field == 'data'"
+                        #searchable="props">
+                        <b-input
+                            v-model="props.filters[props.column.field]"
+                            placeholder="aaaa-mm-dd"
+                            icon="magnify"
+                            size="is-small" />
+                    </template>
+                    <template
+                        v-else-if="column.field == 'id_medico' || column.field == 'id_paciente'"
+                        #searchable="props">
+                        <b-input
+                            v-model="props.filters[props.column.field]"
+                            placeholder="Pesquisa por ID"
+                            icon="magnify"
+                            size="is-small" />
+                    </template>
+                    <template
+                        v-else-if="column.field == 'status'"
+                        #searchable="props">
+                        <b-select placeholder="Selecione..." v-model="props.filters[props.column.field]" size="is-small" icon="magnify">
+                            <option value="">...</option>
+                            <option value="0">Aguardando confirmação</option>
+                            <option value="1">Confirmado</option>
+                            <option value="2">Cancelado</option>
+                            <option value="3">Finalizado</option>
+                        </b-select>
+                    </template>
                     <template v-slot="props">
                         
-                        <template v-if="column.field == 'crud-options-edit'">
+                        <template v-if="column.field == 'id_medico' || column.field == 'id_paciente'">
+                            {{getUserName(props.row[column.field])}}
+                        </template>
+                        <template v-else-if="column.field == 'data'">
+                            {{$moment(props.row[column.field]).format('DD/MM/yyyy')}}
+                        </template>
+                        <template v-else-if="column.field == 'status'">
+                            {{replaceStatus(props.row[column.field])}}
+                        </template>
+                        <template v-else-if="column.field == 'crud-options-edit'">
                             <div class="editar">
                                 <b-button class="is-primary is-outlined" icon-right="border-color" @click="$router.push({path: path + props.row.id})"/>
                             </div>
@@ -50,7 +88,14 @@
 </template>
 
  <script>
+    import apiClient from '~/utils/apiClient.js'
     export default {
+        data(){
+            return{
+                users:[],
+                here:''
+            }
+        },
         props: {
             data: {
                 required: true,
@@ -94,6 +139,25 @@
             },
             finish(id){
                 console.log("Terminando: ",id)
+            },
+            getUserName(id){
+                for(let i = 0; i < this.users.length; i++){
+                    if (this.users[i].id == id)
+                        return "("+this.users[i].id+") "+ this.users[i].first_name.toUpperCase() + " " + this.users[i].last_name.toUpperCase()
+                }
+            },
+            replaceStatus(status){
+                if(status == '0') return "Aguardando confirmação"
+                if(status == '1') return "Confirmado"
+                if(status == '2') return "Cancelado"
+                if(status == '3') return "Finalizado"
+            }
+        },
+        async created(){
+            try{
+                this.users = await apiClient.getAllUsers()
+            }catch(e){
+                console.log("Error in table: ",e)
             }
         }
     }

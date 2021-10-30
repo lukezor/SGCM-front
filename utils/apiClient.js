@@ -192,8 +192,35 @@ class ApiClient {
 
     // Agendamentos
 
+    async getAllAgendamentos() {
+        return internalGet(urljoin('api','agendamentos/'))
+    }
+
+    async createAgendamento(obj) {
+        return internalPost('api/agendamentos/', obj)
+    }
+
+    async alterarAgendamento(obj,id) {
+        return internalPut('api/agendamentos/'+id+'/', obj)
+    }
+
+    async getAgendamentoById(id) {
+        return internalGet(urljoin('api', 'agendamentos', id.toString() + '/'))
+    }
+
+    async getAllClienteAgendamentos(id) {
+        // Pegar os agendamentos para o paciente que está usando o sistema
+        var params = "?id_paciente="+ id
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
     async getAgendamentosToday(today) {
         var params = "?data=" + today
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getAgendamentosByMedicoDateTime(date,time,medico) {
+        var params = ("?id_medico="+medico+"&data_hora=" + date + "T" + time)
         return internalGet(urljoin('api','agendamentos','/',params))
     }
 
