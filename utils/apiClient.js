@@ -140,12 +140,22 @@ class ApiClient {
         return internalGet(urljoin('api', 'users', userId.toString() + '/'))
     }
 
+    async getUserByType(type) {
+        var params = "?user_type=" + type
+        return internalGet(urljoin('api','users','/',params))
+    }
+
+    async getAllUsersToday(today) {
+        var params = "?date_joined=" + today
+        return internalGet(urljoin('api','users','/',params))
+    }
+
     async createUser(user) {
         return internalPost('auth/users/', user)
     }
 
     async updateUser(user) {
-        return internalPut(urljoin('auth','users', user.id.toString() + '/'), user)
+        return internalPut(urljoin('api','users', user.id.toString() + '/'), user)
     }
 
     // INFOS PESSOAIS
@@ -158,6 +168,11 @@ class ApiClient {
         return internalGet(urljoin('api', 'infospessoais', userId.toString() + '/'))
     }
 
+    async getMyPersonalInfo(userId) {
+        var params = "?id_paciente="+userId
+        return internalGet(urljoin('api','infospessoais','/',params))
+    }
+
     async createInfos(infos) {
         return internalPost('api/infospessoais/', infos)
     }
@@ -166,9 +181,76 @@ class ApiClient {
         return internalPut(urljoin('api','infospessoais', infos.id.toString() + '/'), infos)
     }
 
+    async updateUserInfosCadastradas(user) {
+        return internalPut(urljoin('api','userinfo', user.id.toString() + '/'), user)
+    }
+
     async getPacientesSemInfo(){
         var params = "?info_cadastrada=false&user_type=PACIENTE"
         return internalGet(urljoin('api','users','/',params))
+    }
+
+    // Agendamentos
+
+    async getAllAgendamentos() {
+        return internalGet(urljoin('api','agendamentos/'))
+    }
+
+    async createAgendamento(obj) {
+        return internalPost('api/agendamentos/', obj)
+    }
+
+    async deleteAgendamento(id) {
+        return internalDelete('api/agendamentos/'+id+'/')
+    }
+
+    async alterarAgendamento(obj,id) {
+        return internalPut('api/agendamentos/'+id+'/', obj)
+    }
+
+    async changeStatusAgendamento(id,status) {
+        let obj={
+            status: status
+        }
+        return internalPut('api/changeAgendamentoStatus/'+id+'/', obj)
+    }
+
+    async getAgendamentoById(id) {
+        return internalGet(urljoin('api', 'agendamentos', id.toString() + '/'))
+    }
+
+    async getAllClienteAgendamentos(id) {
+        // Pegar os agendamentos para o paciente que está usando o sistema
+        var params = "?id_paciente="+ id
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getAgendamentosToday(today) {
+        var params = "?data=" + today
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getAgendamentosByMedicoDateTime(date,time,medico) {
+        var params = ("?id_medico="+medico+"&data_hora=" + date + "T" + time)
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getMyAgendamentosToday(today,id) {
+        // Pegar os agendamentos de hoje aguardando confirmação para o paciente que está usando o sistema
+        var params = "?data=" + today + "&id_paciente="+ id + '&status=0'
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    async getMyConsultasToday(today,id) {
+        // Pegar os agendamentos de hoje confirmados para o medico que está usando o sistema
+        var params = "?data=" + today + "&id_medico="+ id + '&status=1'
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
+
+    // Prontuários
+
+    async getProntuariosByQuery(query){
+        return internalGet(urljoin('api','prontuarios','/',query))
     }
 }
 

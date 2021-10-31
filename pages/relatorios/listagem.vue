@@ -15,6 +15,7 @@
 import Table from '~/components/molecules/Table.vue';
 export default {
   name: "RelatoriosListagem",
+  middleware: ['authenticated','allowAdminOnly'],
   components:{Table},
   data(){
     return{

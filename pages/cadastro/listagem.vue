@@ -20,7 +20,7 @@ import apiClient from '~/utils/apiClient.js'
 import notification from '~/utils/notification.js'
 export default {
   name: "CadastroListagem",
-  middleware: 'authenticated',
+  middleware: ['authenticated','allowInternalOnly'],
   components:{Table},
   data(){
     return{

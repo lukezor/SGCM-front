@@ -1,8 +1,11 @@
 <template>
   <div class = "main-container">
     <div class= "padding-geral">
-      <div>
+      <div style="display:flex;justify-content:space-between">
         <p class="title"> Agendamento de consultas </p>
+        <div @click.native="reload()" class="reloadButton">
+            <b-icon class="reloadIcon" @click.native="reload()" icon="reload"/>
+        </div>
       </div>
       <div class="container is-fluid">
         <Table :data="dados" :columns="colunas" :path="'/agendamento/'"/>
@@ -16,38 +19,38 @@
 
 <script>
 import Table from '~/components/molecules/Table.vue';
+import apiClient from '~/utils/apiClient.js'
+import notification from '~/utils/notification.js'
+import $store from '~/store/userData';
 export default {
   name: "AgendamentoListagem",
   components:{Table},
   data(){
     return{
-      dados:[
-        { 'id': 1, 'nome_paciente': 'Jesse', 'nome_medico': 'Simmons', 'date': '15/10/2021', 'time': '12:00' },
-        { 'id': 2, 'nome_paciente': 'John', 'nome_medico': 'Jacobs', 'date': '15/10/2021', 'time': '13:00' },
-        { 'id': 3, 'nome_paciente': 'Tina', 'nome_medico': 'Gilbert', 'date': '14/10/2021', 'time': '14:00' },
-        { 'id': 4, 'nome_paciente': 'Clarence', 'nome_medico': 'Flores', 'date': '13/10/2021', 'time': '08:00' },
-        { 'id': 5, 'nome_paciente': 'Anne', 'nome_medico': 'Lee', 'date': '14/10/2021', 'time': '12:00' }
-      ],
+      dados:[],
       colunas:[
                 {
-                    field: 'nome_paciente',
-                    label: 'Nome do paciente',
+                    placeholder:true
+                },
+                {
+                    field: 'id_medico',
+                    label: 'Identificador do médico',
                     searchable: true,
                 },
                 {
-                    field: 'nome_medico',
-                    label: 'Nome do médico',
-                    searchable: true,
-                },
-                {
-                    field: 'date',
+                    field: 'data',
                     label: 'Data',
-                    centered: true
+                    searchable: true,
                 },
                 {
-                    field: 'time',
+                    field: 'hora',
                     label: 'Horário',
-                    centered: true
+                    searchable: true,
+                },
+                {
+                    field: 'status',
+                    label: 'Status',
+                    searchable: true,
                 },
                 {
                     field:'crud-options-confirm-edit',
@@ -60,8 +63,38 @@ export default {
   methods:{
         redirect(location){
             this.$router.push({path: location});
+        },
+        async reload(){
+          await this.loadData()
+        },
+        async loadData(){
+          const loadingComponent = this.$buefy.loading.open()
+          if($store.state.user.user_type == "PACIENTE"){
+            try{
+              this.dados = await apiClient.getAllClienteAgendamentos($store.state.user.id)
+            } catch (err) {
+              console.log("Erro: ",err)
+              notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+            }
+          }
+          else{
+              this.colunas[0].field = 'id_paciente'
+              this.colunas[0].label = 'Identificador do paciente'
+              this.colunas[0].searchable = true
+              this.colunas[5].field = 'crud-options-confirm-edit-delete'
+            try{
+              this.dados = await apiClient.getAllAgendamentos()
+            } catch (err) {
+              console.log("Erro: ",err)
+              notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+            }
+          }
+          loadingComponent.close()
         }
-    }
+  },
+  async created(){
+    await this.loadData()
+  }
 };
 </script>
 
@@ -86,5 +119,16 @@ export default {
 .buttons{
   position: fixed;
   bottom: 50px;
+}
+.reloadButton{
+    background-color: #4d66b083;
+    cursor:pointer;
+    width: 40px;
+    height: 40px;
+    margin-left:auto;
+    border-radius: 100px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
 }
 </style>

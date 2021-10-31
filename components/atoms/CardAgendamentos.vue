@@ -8,7 +8,8 @@
       </div>
       <div class="infosWrapper">
           <p> Data: {{today}} </p>
-          <p> Consultas marcadas hoje: {{consultasMarcadas}} </p>
+          <p v-if="userType!='PACIENTE'"> Consultas marcadas hoje: {{consultasMarcadas}} </p>
+          <p v-else> Minhas consultas hoje: {{consultasMarcadas}} </p>
       </div>
       <div class="buttonArea">
           <b-button @click.native="redirect('/agendamento/')" class="leftButton" type="is-primary">Novo agendamento</b-button>
@@ -20,17 +21,25 @@
 <script>
 import apiClient from '~/utils/apiClient.js'
 import notification from '~/utils/notification.js'
+import $store from '~/store/userData';
 export default {
     data(){
         return{
             today: "Carregando...",
             consultasMarcadas: "Carregando...",
+            formattedToday: "",
+        }
+    },
+    computed:{
+        userType(){
+            return $store.state.user.user_type
         }
     },
     methods:{
         async reloadCard(){
             this.consultasMarcadas = "Carregando..."
             this.today = "Carregando..."
+            this.formattedToday = "Carregando..."
             this.getToday()
             await this.loadData()
         },
@@ -40,14 +49,21 @@ export default {
             var mm = String(this.today.getMonth() + 1).padStart(2, '0');
             var yyyy = this.today.getFullYear();
             this.today = dd + '-' + mm + '-' + yyyy
+            this.formattedToday = yyyy + '-' + mm + '-' + dd 
         },
         redirect(location){
             this.$router.push({path: location});
         },
         async loadData(){
             try{
-            //this.consultasMarcadas = await apiClient.getAgendamentosByFilter()
-            this.consultasMarcadas = "0"
+                if($store.state.user.user_type != "PACIENTE"){
+                    this.consultasMarcadas = await apiClient.getAgendamentosToday(this.formattedToday)
+                    this.consultasMarcadas = this.consultasMarcadas.length
+                }
+                else{
+                    this.consultasMarcadas = await apiClient.getMyAgendamentosToday(this.formattedToday,$store.state.user.id)
+                    this.consultasMarcadas = this.consultasMarcadas.length
+                }
             }catch(e){
                 notification.sendNotification('Ocorreu um erro ao buscar as consultas, tente novamente!', 'is-danger', 5000)
             }

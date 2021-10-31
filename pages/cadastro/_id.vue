@@ -74,10 +74,11 @@
     import CustomSelect from '~/components/atoms/CustomSelect.vue'
     import notification from '~/utils/notification'
     import apiClient from '~/utils/apiClient'
+    import $store from '~/store/userData';
 
     export default {
 
-        middleware: 'authenticated',
+        middleware: ['authenticated','allowInternalOnly'],
         name: 'CadastroUsuário',
 
         components: {
@@ -115,9 +116,12 @@
                     this.sendError('As senhas não conferem!')
                     return
                 }
-                else if(this.user.user_type == 'ADMIN'){
+                if(this.user.user_type == 'ADMIN'){
                     this.user.is_superuser = true
                     this.user.is_staff = true
+                }
+                if(this.user.user_type == 'PACIENTE'){
+                    this.user.info_cadastrada = false
                 }
                 try{
                     await apiClient.createUser(this.user)
@@ -125,8 +129,8 @@
                         this.sendError(err)
                         return
                     }
-                    this.sendSuccess('Usuário criado com sucesso!')
-                    this.retornar()
+                this.sendSuccess('Usuário criado com sucesso!')
+                this.retornar()
             },
             async alterar() {
                 const objTratado = {
@@ -146,7 +150,14 @@
                     this.retornar()
             },
             retornar(){
-                this.$router.push('/cadastro/listagem')
+                if (this.userType == "SECRETARIO") this.$router.push('/')
+                else this.$router.push('/cadastro/listagem')
+            }
+        },
+
+        computed:{
+            userType(){
+                return $store.state.user.user_type
             }
         },
 
@@ -158,9 +169,6 @@
                     if(this.user.user_type == 'ADMIN'){
                         this.user.is_superuser = true
                         this.user.is_staff = true
-                    }
-                    if(this.user.user_type == 'PACIENTE'){
-                        this.user.info_cadastrada = false
                     }
                 } catch (err) {
                     this.sendError('Ocorreu um erro ao buscar, tente novamente!')
