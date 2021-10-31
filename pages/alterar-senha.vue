@@ -11,15 +11,15 @@
                 <ValidationObserver ref="observer">
                 <div class="columns">
                     <div class="column is-full-mobile is-half-tablet is-8-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Senha anterior *" v-model="user.oldPass" :upperCase="0"/>
+                        <CustomInput rules="required|max:100" type="password" :password-reveal="true" label="Senha anterior *" v-model="user.oldPass" :upperCase="0"/>
                     </div>
                 </div>
                 <div class="columns">
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Nova senha *" v-model="user.newPass" :upperCase="0"/>
+                        <CustomInput rules="required|max:100" type="password" :password-reveal="true" label="Nova senha *" v-model="user.newPass" :upperCase="0"/>
                     </div>
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Confirmação de nova senha *" v-model="passConfirmation" :upperCase="0"/>
+                        <CustomInput rules="required|max:100" type="password" :password-reveal="true" label="Confirmação de nova senha *" v-model="passConfirmation" :upperCase="0"/>
                     </div>
                 </div>
                 </ValidationObserver>

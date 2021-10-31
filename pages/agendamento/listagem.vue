@@ -1,8 +1,11 @@
 <template>
   <div class = "main-container">
     <div class= "padding-geral">
-      <div>
+      <div style="display:flex;justify-content:space-between">
         <p class="title"> Agendamento de consultas </p>
+        <div @click.native="reload()" class="reloadButton">
+            <b-icon class="reloadIcon" @click.native="reload()" icon="reload"/>
+        </div>
       </div>
       <div class="container is-fluid">
         <Table :data="dados" :columns="colunas" :path="'/agendamento/'"/>
@@ -60,32 +63,38 @@ export default {
   methods:{
         redirect(location){
             this.$router.push({path: location});
+        },
+        async reload(){
+          await this.loadData()
+        },
+        async loadData(){
+          const loadingComponent = this.$buefy.loading.open()
+          if($store.state.user.user_type == "PACIENTE"){
+            try{
+              this.dados = await apiClient.getAllClienteAgendamentos($store.state.user.id)
+            } catch (err) {
+              console.log("Erro: ",err)
+              notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+            }
+          }
+          else{
+              this.colunas[0].field = 'id_paciente'
+              this.colunas[0].label = 'Identificador do paciente'
+              this.colunas[0].searchable = true
+              this.colunas[5].field = 'crud-options-confirm-edit-delete'
+            try{
+              this.dados = await apiClient.getAllAgendamentos()
+            } catch (err) {
+              console.log("Erro: ",err)
+              notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+            }
+          }
+          loadingComponent.close()
         }
   },
   async created(){
-      const loadingComponent = this.$buefy.loading.open()
-      if($store.state.user.user_type == "PACIENTE"){
-        try{
-          this.dados = await apiClient.getAllClienteAgendamentos($store.state.user.id)
-        } catch (err) {
-          console.log("Erro: ",err)
-          notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
-        }
-      }
-      else{
-          this.colunas[0].field = 'id_paciente'
-          this.colunas[0].label = 'Identificador do paciente'
-          this.colunas[0].searchable = true
-        try{
-          this.dados = await apiClient.getAllAgendamentos()
-        } catch (err) {
-          console.log("Erro: ",err)
-          notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
-        }
-      }
-      
-      loadingComponent.close()
-    }
+    await this.loadData()
+  }
 };
 </script>
 
@@ -110,5 +119,16 @@ export default {
 .buttons{
   position: fixed;
   bottom: 50px;
+}
+.reloadButton{
+    background-color: #4d66b083;
+    cursor:pointer;
+    width: 40px;
+    height: 40px;
+    margin-left:auto;
+    border-radius: 100px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
 }
 </style>

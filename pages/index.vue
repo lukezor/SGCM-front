@@ -29,7 +29,7 @@
   <div v-if="userLoaded" class="container-right">
     <!-- Direito Full -->
      <div v-if="userType =='MEDICO'" class="container-right-full">
-      <CardConfirmacoes :userType="'MEDICO'" :quantidade="7"/>
+      <CardConfirmacoes :quantidade="7"/>
     </div>
     <!-- Superior Direito -->
     <div v-if="userType != 'MEDICO'" class="container-right-top">
@@ -130,7 +130,8 @@ export default {
   display:none
 }
 
-@media only screen and (max-width: 900px) {
+@media screen and (max-width: 900px), 
+       screen and (max-height: 600px) {
   .container-right{
     display:none
   }

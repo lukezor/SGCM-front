@@ -78,7 +78,7 @@
 
     export default {
 
-        middleware: 'authenticated',
+        middleware: ['authenticated','allowInternalOnly'],
         name: 'CadastroUsuário',
 
         components: {

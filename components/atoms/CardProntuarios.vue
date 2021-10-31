@@ -10,8 +10,9 @@
           <p> Quantidade de prontuários encontrados: {{countProntuarios}} </p>
       </div>
       <div class="buttonArea">
-          <b-button v-if="hasCreate" @click.native="redirect('/cadastro/')" class="leftButton" type="is-primary">Cadastrar novo prontuário</b-button>
-          <b-button @click.native="redirect('/cadastro/listagem')" class="rightButton" type="is-primary is-light">Listagem de prontuários</b-button>
+          <b-button v-if="userType == 'MEDICO'" @click.native="redirect('/prontuario/')" class="leftButton" type="is-primary">Cadastrar novo prontuário</b-button>
+          <b-button v-if="userType == 'MEDICO'" @click.native="redirect('/prontuario/listagem')" class="rightButton" type="is-primary is-light">Listagem de prontuários</b-button>
+          <b-button v-else @click.native="redirect('/prontuario/listagem')" class="rightButton" type="is-primary">Meus prontuários</b-button>
       </div>
   </div>
 </template>
@@ -26,12 +27,10 @@ export default {
             countProntuarios: "Carregando...",
         }
     },
-    props:{
-        hasCreate:{
-            type:Boolean,
-            required:false,
-            default:true
-        },
+    computed:{
+        userType(){
+            return $store.state.user.user_type
+        }
     },
     methods:{
         async reloadCard(){

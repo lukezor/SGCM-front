@@ -10,7 +10,8 @@
           <Table :data="dados" :columns="colunas" :perPage="quantidade"/>
       </div>
       <div v-else class="infosWrapper">
-          <p>Nenhuma consulta encontrada para hoje - {{today}}</p>
+          <p v-if="userType=='PACIENTE'">Nenhuma consulta encontrada para hoje - {{today}}</p>
+          <p v-else>Nenhuma consulta confirmada até agora - {{today}}</p>
       </div>
   </div>
 </template>
@@ -31,7 +32,7 @@ export default {
           colunas:[
                     {
                         field: 'id_medico',
-                        label: 'ID do médico',
+                        label: '(ID) Médico',
                     },
                     {
                         field: 'data',
@@ -56,10 +57,10 @@ export default {
             required:false,
             default:'1'
         },
-        userType:{
-            type:String,
-            required:false,
-            default:'SECRETARIO'
+    },
+    computed:{
+        userType(){
+            return $store.state.user.user_type
         }
     },
     methods:{
@@ -80,6 +81,8 @@ export default {
         async loadData(){
             if(this.userType == 'MEDICO'){
                 this.colunas[3].field = 'crud-options-finish'
+                this.colunas[0].field = 'id_paciente'
+                this.colunas[0].label = '(ID) Paciente'
                 try{
                     this.dados=await apiClient.getMyConsultasToday(this.formattedToday,$store.state.user.id)
                     if(this.dados.length) this.hasDados = true
@@ -143,10 +146,8 @@ export default {
     color:#4D66B0
 }
 .infosWrapper{
-    display:flex;
-    height: 60%;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    justify-content: space-around;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 </style>

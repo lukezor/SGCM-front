@@ -6,7 +6,10 @@
         <div @click.prevent="doLogin()">
             <Button btnName="RECUPERAR SENHA"/>
         </div>
-        <p style="color: gray; margin-top:40px">2021© SGCM</p>
+        <div style="width:100%;display:flex;justify-content:space-between">
+            <p style="color: gray; margin-top:40px">2021© SGCM</p>
+            <p @click.prevent="retornar()" style="color: green; margin-top:40px; cursor:pointer">&lt; Voltar </p>
+        </div>
     </form>
   </div>
 </template>
@@ -50,6 +53,9 @@ export default {
             } finally {
                 loadingComponent.close()
             }
+        },
+        retornar(){
+            this.$router.push({ path: '/login' })
         }
     },
     created(){

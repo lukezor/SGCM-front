@@ -5,10 +5,10 @@
         <p class="title"> Prontuários </p>
       </div>
       <div class="container is-fluid">
-        <Table :data="dados" :columns="colunas"/>
+        <Table :data="dados" :columns="colunas" :path="'/prontuario/'"/>
       </div>
       <div class="buttons">
-        <b-button @click.native="redirect('/prontuario/')" type="is-primary">Criar novo prontuário</b-button>
+        <b-button v-if="userType == 'MEDICO'" @click.native="redirect('/prontuario/')" type="is-primary">Criar novo prontuário</b-button>
       </div>
     </div>
   </div>
@@ -16,33 +16,26 @@
 
 <script>
 import Table from '~/components/molecules/Table.vue';
+import apiClient from '~/utils/apiClient.js'
+import notification from '~/utils/notification.js'
+import $store from '~/store/userData';
 export default {
   name: "ProntuarioListagem",
+  middleware: ['authenticated','prontuarioPermission'],
   components:{Table},
   data(){
     return{
-      dados:[
-        { 'id': 1, 'nome_paciente': 'Jesse', 'nome_medico': 'Simmons', 'date': '15/10/2021' },
-        { 'id': 2, 'nome_paciente': 'John', 'nome_medico': 'Jacobs', 'date': '15/10/2021' },
-        { 'id': 3, 'nome_paciente': 'Tina', 'nome_medico': 'Gilbert', 'date': '14/10/2021' },
-        { 'id': 4, 'nome_paciente': 'Clarence', 'nome_medico': 'Flores', 'date': '13/10/2021'},
-        { 'id': 5, 'nome_paciente': 'Anne', 'nome_medico': 'Lee', 'date': '14/10/2021'}
-      ],
+      dados:[],
       colunas:[
                 {
-                    field: 'nome_paciente',
-                    label: 'Nome do paciente',
+                    field: 'id_paciente',
+                    label: '(ID) Paciente',
                     searchable: true,
                 },
                 {
-                    field: 'nome_medico',
-                    label: 'Nome do médico',
+                    field: 'ref',
+                    label: 'Data de referência',
                     searchable: true,
-                },
-                {
-                    field: 'date',
-                    label: 'Data de atendimento',
-                    centered: true
                 },
                 {
                     field:'crud-options-edit',
@@ -52,10 +45,40 @@ export default {
             ]
       }
     },
-  methods:{
+    computed:{
+      userType(){
+        return $store.state.user.user_type
+      }
+    },
+    methods:{
         redirect(location){
             this.$router.push({path: location});
         }
+    },
+    async created(){
+      const loadingComponent = this.$buefy.loading.open()
+      if(this.userType == 'MEDICO'){
+        let query = '?id_medico='+$store.state.user.id
+        try{
+          this.dados = await apiClient.getProntuariosByQuery(query)
+        } catch (err) {
+          console.log("Erro: ",err)
+          notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+        }
+      }
+      else{
+        let query = '?id_paciente'+$store.state.user.id
+        this.colunas[0].field = 'id_medico'
+        this.colunas[0].label = 'Identificação do médico'
+        this.colunas[2].field = 'crud-options-view'
+        try{
+          this.dados = await apiClient.getProntuariosByQuery(query)
+        } catch (err) {
+          console.log("Erro: ",err)
+          notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+        }
+      }
+      loadingComponent.close()
     }
 };
 </script>

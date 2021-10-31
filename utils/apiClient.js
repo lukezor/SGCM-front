@@ -200,8 +200,19 @@ class ApiClient {
         return internalPost('api/agendamentos/', obj)
     }
 
+    async deleteAgendamento(id) {
+        return internalDelete('api/agendamentos/'+id+'/')
+    }
+
     async alterarAgendamento(obj,id) {
         return internalPut('api/agendamentos/'+id+'/', obj)
+    }
+
+    async changeStatusAgendamento(id,status) {
+        let obj={
+            status: status
+        }
+        return internalPut('api/changeAgendamentoStatus/'+id+'/', obj)
     }
 
     async getAgendamentoById(id) {
@@ -225,14 +236,14 @@ class ApiClient {
     }
 
     async getMyAgendamentosToday(today,id) {
-        // Pegar os agendamentos de hoje para o paciente que está usando o sistema
-        var params = "?data=" + today + "&id_paciente="+ id
+        // Pegar os agendamentos de hoje aguardando confirmação para o paciente que está usando o sistema
+        var params = "?data=" + today + "&id_paciente="+ id + '&status=0'
         return internalGet(urljoin('api','agendamentos','/',params))
     }
 
     async getMyConsultasToday(today,id) {
-        // Pegar os agendamentos de hoje para o medico que está usando o sistema
-        var params = "?data=" + today + "&id_medico="+ id
+        // Pegar os agendamentos de hoje confirmados para o medico que está usando o sistema
+        var params = "?data=" + today + "&id_medico="+ id + '&status=1'
         return internalGet(urljoin('api','agendamentos','/',params))
     }
 

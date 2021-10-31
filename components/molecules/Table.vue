@@ -53,29 +53,42 @@
                             {{$moment(props.row[column.field]).format('DD/MM/yyyy')}}
                         </template>
                         <template v-else-if="column.field == 'status'">
-                            {{replaceStatus(props.row[column.field])}}
+                            {{replaceAndSaveStatus(props.row[column.field],props.row.id)}}
                         </template>
                         <template v-else-if="column.field == 'crud-options-edit'">
                             <div class="editar">
                                 <b-button class="is-primary is-outlined" icon-right="border-color" @click="$router.push({path: path + props.row.id})"/>
                             </div>
                         </template>
+                        <template v-else-if="column.field == 'crud-options-view'">
+                            <div class="editar">
+                                <b-button class="is-primary is-outlined" icon-right="file-find" @click="$router.push({path: path + props.row.id})"/>
+                            </div>
+                        </template>
                         <template v-else-if="column.field == 'crud-options-confirm-edit'">
                             <div class="editar">
-                                <b-button class="is-primary is-outlined" icon-right="check" @click="confirm(props.row.id)" :disabled="isDisabledConfirm"/>
-                                <b-button class="is-primary is-outlined" icon-right="close" @click="unconfirm(props.row.id)" :disabled="isDisabledUnconfirm"/>
+                                <b-button class="is-primary is-outlined" icon-right="check" @click="confirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
+                                <b-button class="is-primary is-outlined" icon-right="close" @click="unconfirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
+                                <b-button class="is-primary is-outlined" icon-right="border-color" @click="$router.push({path: path + props.row.id})" :disabled="disabledRows.includes(props.row.id)"/>
+                            </div>
+                        </template>
+                        <template v-else-if="column.field == 'crud-options-confirm-edit-delete'">
+                            <div class="editar">
+                                <b-button class="is-primary is-outlined" icon-right="check" @click="confirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
+                                <b-button class="is-primary is-outlined" icon-right="close" @click="unconfirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
                                 <b-button class="is-primary is-outlined" icon-right="border-color" @click="$router.push({path: path + props.row.id})"/>
+                                <b-button class="is-danger is-outlined" icon-right="delete" @click="deelete(props.row.id)"/>
                             </div>
                         </template>
                         <template v-else-if="column.field == 'crud-options-confirm'">
                             <div class="editar">
-                                <b-button class="is-primary is-outlined" icon-right="check" @click="confirm(props.row.id)" :disabled="isDisabledConfirm"/>
-                                <b-button class="is-primary is-outlined" icon-right="close" @click="unconfirm(props.row.id)" :disabled="isDisabledUnconfirm"/>
+                                <b-button class="is-primary is-outlined" icon-right="check" @click="confirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
+                                <b-button class="is-primary is-outlined" icon-right="close" @click="unconfirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
                             </div>
                         </template>
                         <template v-else-if="column.field == 'crud-options-finish'">
                             <div class="editar">
-                                <b-button class="is-primary is-outlined" icon-right="alarm-check" @click="finish(props.row.id)" :disabled="isDisabledConfirm"/>
+                                <b-button class="is-primary is-outlined" icon-right="alarm-check" @click="finish(props.row.id)"/>
                             </div>
                         </template>
                         <template v-else>
@@ -89,10 +102,12 @@
 
  <script>
     import apiClient from '~/utils/apiClient.js'
+    import notification from '~/utils/notification.js'
     export default {
         data(){
             return{
                 users:[],
+                disabledRows:[],
                 here:''
             }
         },
@@ -131,14 +146,49 @@
             }
         },
         methods:{
-            confirm(id){
-                console.log("Confirmando: ",id)
+            async confirm(id){
+                console.log("Confirmando consulta com id: ",id)
+                try{
+                    await apiClient.changeStatusAgendamento(id,1)
+                }catch(e){
+                    console.log(e)
+                    notification.sendNotification('Ocorreu um erro ao confirmar a consulta, tente novamente!', 'is-danger', 5000)
+                    return
+                }
+                notification.sendNotification('Consulta confirmada com sucesso.', 'is-success', 5000)
             },
-            unconfirm(id){
-                console.log("Cancelando: ",id)
+            async unconfirm(id){
+                console.log("Cancelando consulta com id: ",id)
+                try{
+                    await apiClient.changeStatusAgendamento(id,2)
+                }catch(e){
+                    console.log(e)
+                    notification.sendNotification('Ocorreu um erro ao cancelar a consulta, tente novamente!', 'is-danger', 5000)
+                    return
+                }
+                notification.sendNotification('Consulta cancelada com sucesso.', 'is-success', 5000)
             },
-            finish(id){
-                console.log("Terminando: ",id)
+            async finish(id){
+                console.log("Finalizando consulta com id: ",id)
+                try{
+                    await apiClient.changeStatusAgendamento(id,3)
+                }catch(e){
+                    console.log(e)
+                    notification.sendNotification('Ocorreu um erro ao finalizar a consulta, tente novamente!', 'is-danger', 5000)
+                    return
+                }
+                notification.sendNotification('Consulta finalizada com sucesso.', 'is-success', 5000)
+            },
+            async deelete(id){
+                console.log("Deletando consulta com id: ",id)
+                try{
+                    await apiClient.deleteAgendamento(id)
+                }catch(e){
+                    console.log(e)
+                    notification.sendNotification('Ocorreu um erro ao deletar a consulta, tente novamente!', 'is-danger', 5000)
+                    return
+                }
+                notification.sendNotification('Consulta deletada com sucesso.', 'is-success', 5000)
             },
             getUserName(id){
                 for(let i = 0; i < this.users.length; i++){
@@ -146,11 +196,20 @@
                         return "("+this.users[i].id+") "+ this.users[i].first_name.toUpperCase() + " " + this.users[i].last_name.toUpperCase()
                 }
             },
-            replaceStatus(status){
+            replaceAndSaveStatus(status,row){
                 if(status == '0') return "Aguardando confirmação"
-                if(status == '1') return "Confirmado"
-                if(status == '2') return "Cancelado"
-                if(status == '3') return "Finalizado"
+                if(status == '1'){
+                    if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                    return "Confirmado"
+                }
+                if(status == '2'){
+                    if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                    return "Cancelado" 
+                } 
+                if(status == '3'){
+                    if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                    return "Finalizado" 
+                } 
             }
         },
         async created(){

@@ -2,7 +2,7 @@
   <div class="padding">
       <div class="titleWrapper">
         <p class="cardTitle">Atualização de Informações Pessoais</p>
-        <div @click.native="reloadCard()" class="reloadButton">
+        <div v-if="userType != 'PACIENTE'" @click.native="reloadCard()" class="reloadButton">
             <b-icon class="reloadIcon" @click.native="reloadCard()" icon="reload"/>
         </div>
       </div>
@@ -12,6 +12,7 @@
       </div>
       <div v-else class="infosWrapper">
           <p> Informações cadastradas? <strong>{{isCadastrada}}</strong></p>
+          <p v-if="isCadastrada == 'Não'"><strong>Lembrete:</strong> Por favor, cadastre as suas informações pessoais para desfrutar das funcionalidades do prontuário eletrônico</p>
       </div>
       <div class="buttonArea">
           <b-button v-if="userType == 'PACIENTE'" @click.native="handlePatientRedirect()" class="leftButton" type="is-primary">Atualizar minhas informações pessoais</b-button>

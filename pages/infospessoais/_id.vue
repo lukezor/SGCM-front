@@ -188,7 +188,8 @@
                     await apiClient.createInfos(this.infos)
                     await apiClient.updateUserInfosCadastradas(objTratado)
                     }catch(err){
-                        this.sendError(err)
+                        console.log(err)
+                        this.sendError("Por favor preencha corretamente os campos.")
                         return
                     }
                     this.sendSuccess('Informações pessoais atualizadas com sucesso!')
@@ -208,7 +209,8 @@
                     await apiClient.updateInfos(this.infos)
                     await apiClient.updateUserInfosCadastradas(objTratado)
                     }catch(err){
-                        this.sendError(err)
+                        console.log(err)
+                        this.sendError("Por favor preencha corretamente os campos.")
                         return
                     }
                     this.sendSuccess('Informações pessoais atualizadas com sucesso!')
