@@ -151,6 +151,7 @@
                     return this.sendError("Preencha todos os campos.")
                 this.agendamento.hora = this.agendamento.hora.substring(0,5)
                 this.agendamento.data = this.getCorrectDate()
+                if (moment(this.agendamento.data+"T"+this.agendamento.hora).isBefore(moment())) return this.sendError("Entrada inválida. Selecione um horário/data possíveis.")
                 try{
                     await apiClient.createAgendamento(this.agendamento)
                 }catch(err){
@@ -166,6 +167,7 @@
                     return this.sendError("Preencha todos os campos.")
                 const horaTratada = this.agendamento.hora.substring(0,5)
                 const dataHora = this.agendamento.data + "T" + horaTratada
+                if (moment(dataHora).isBefore(moment())) return this.sendError("Entrada inválida. Selecione um horário/data possíveis.")
                 const objTratado = {
                     status: String(this.agendamento.status),
                     data: this.agendamento.data,
@@ -196,8 +198,16 @@
                 return String(data)
             },
             async checkHorarioAvailable(param){
+                const now = String(moment().format(moment.HTML5_FMT.DATETIME_LOCAL))
                 if (param == 'new'){
                     let correctTime = this.agendamento.hora.substring(0,5)
+                    let selectedTime = moment(this.getCorrectDate()+"T"+correctTime,moment.HTML5_FMT.DATETIME_LOCAL)._i
+                    let allowed = false
+                    if(moment(now).isAfter(moment(selectedTime))) allowed = true
+                    if (allowed){
+                        this.sendError('Entrada inválida. Selecione um horário/data possíveis.')
+                        return
+                    }
                     var array = await apiClient.getAgendamentosByMedicoDateTime(this.getCorrectDate(),correctTime,this.agendamento.id_medico)
                     console.log("array:",array)
                     if (array.length) this.sendError('Já existe uma consulta nesse mesmo horário, por favor escolha outro.')
@@ -205,6 +215,13 @@
                 }
                 else{
                     let correctTime = this.agendamento.hora.substring(0,5)
+                    let selectedTime = moment(this.agendamento.data+"T"+correctTime,moment.HTML5_FMT.DATETIME_LOCAL)
+                    let allowed = false
+                    if(moment(now).isAfter(moment(selectedTime))) allowed = true
+                    if (allowed){
+                        this.sendError('Entrada inválida. Selecione um horário/data possíveis.')
+                        return
+                    }
                     var array = await apiClient.getAgendamentosByMedicoDateTime(this.agendamento.data,correctTime,this.agendamento.id_medico)
                     console.log("array:",array)
                     if (array.length) this.sendError('Já existe uma consulta nesse mesmo horário, por favor escolha outro.')

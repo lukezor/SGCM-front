@@ -79,14 +79,32 @@
                                 </div>
                             </div>
                             <div class="columns">
-                                <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <div class="column is-full-mobile is-half-tablet is-6-desktop">
                                     <CustomInput disabled rules="required|max:150" type="text" label="Naturalidade" v-model="infos.naturalidade"/>
                                 </div>
+                                <div class="column is-full-mobile is-half-tablet is-6-desktop">
+                                    <CustomInput disabled rules="required|max:150" type="text" label="Profissao" v-model="infos.profissao"/>
+                                </div>
+                            </div>
+
+                            <div class="columns">
+                                <div class="column is-full-mobile is-half-tablet is-6-desktop">
+                                    <CustomInput disabled rules="required|max:150" type="text" label="Responsável/cuidador/acompanhante" v-model="infos.responsavel"/>
+                                </div>
+                                <div class="column is-full-mobile is-half-tablet is-6-desktop">
+                                    <CustomInput disabled rules="required|max:150" type="text" label="Plano de saúde" v-model="infos.plano_saude"/>
+                                </div>
+                            </div>
+
+                            <div class="columns">
                                 <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                                    <CustomInput disabled rules="required|max:15" type="text" label="Cor/Raça" v-model="infos.cor_raca"/>
+                                    <CustomInput disabled rules="required|max:150" type="text" label="Cor/Raça" v-model="infos.cor_raca"/>
                                 </div>
                                 <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                                    <CustomInput disabled rules="required|max:150" type="text" label="Profissao" v-model="infos.profissao"/>
+                                    <CustomInput disabled rules="required|max:15" type="text" label="Religião" v-model="infos.religiao"/>
+                                </div>
+                                <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                    <CustomInput disabled rules="required|max:150" type="text" label="Estado civil" v-model="infos.estado_civil"/>
                                 </div>
                             </div>
                         </div>
@@ -98,10 +116,10 @@
                                 <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Queixa principal e duraçao (QD)" v-model="prontuario.qd"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="História Progressa da moléstia atual (HPMA)" v-model="prontuario.hpma"/>
+                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="História da doença atual" v-model="prontuario.hda"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Interrogatório sistemico dos demais aparelhos (ISDA)" v-model="prontuario.isda"/>
+                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exame físico geral" v-model="prontuario.efg"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -129,18 +147,18 @@
                                 <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames" v-model="prontuario.exames"/>
+                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
                             </div>
                         </div>
                     </b-step-item>
 
-                    <b-step-item step="5" :clickable="true" label="Receitas">
+                    <b-step-item step="5" :clickable="true" label="Prescrição">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
                                 <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Evoluções" v-model="prontuario.evolucoes"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Prescrições" v-model="prontuario.prescricoes"/>
+                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Receitas" v-model="prontuario.receitas"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
                                 <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Informações adicionais" v-model="prontuario.info_adicional"/>
@@ -183,8 +201,8 @@
                     id_medico:null,
                     teste:null,
                     qd:null,
-                    hpma:null,
-                    isda:null,
+                    hda:null,
+                    efg:null,
                     habitos:null,
                     antecedentes_pessoais:null,
                     antecedentes_familiares:null,
@@ -214,6 +232,10 @@
                     telefone:null,
                     data_nascimento:null,
                     cor_raca:null,
+                    religiao: null,
+                    estado_civil: null,
+                    plano_saude: null,
+                    responsavel: null
                 },
                 unformattedDate: null,
                 obj:[],

@@ -60,6 +60,11 @@
                                 <b-button class="is-primary is-outlined" icon-right="border-color" @click="$router.push({path: path + props.row.id})"/>
                             </div>
                         </template>
+                        <template v-else-if="column.field == 'relatorio'">
+                            <div class="editar">
+                                <b-button class="is-primary is-outlined" icon-right="clipboard-edit" @click="$router.push({path: path + props.row.id})"/>
+                            </div>
+                        </template>
                         <template v-else-if="column.field == 'crud-options-view'">
                             <div class="editar">
                                 <b-button class="is-primary is-outlined" icon-right="file-find" @click="$router.push({path: path + props.row.id})"/>

@@ -23,7 +23,7 @@
 
                 <div class="columns">
                     <div class="column is-full-mobile is-half-tablet is-8-desktop">
-                        <CustomInput rules="required|max:100" type="email" label="Endereço de e-mail *" v-model="user.email" :upperCase="2"/>
+                        <CustomInput rules="email|required|max:100" type="email" label="Endereço de e-mail *" v-model="user.email" :upperCase="2"/>
                     </div>
                 </div>
 
@@ -49,10 +49,10 @@
 
                 <div v-if="user.id == null" class="columns">
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Senha *" v-model="user.password" :upperCase="0"/>
+                        <CustomInput rules="required|max:100" :password-reveal="true" type="password" label="Senha *" v-model="user.password" :upperCase="0"/>
                     </div>
                     <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                        <CustomInput rules="required|max:100" type="password" label="Confirmação de senha *" v-model="passConfirmation" :upperCase="0"/>
+                        <CustomInput rules="required|max:100" :password-reveal="true" type="password" label="Confirmação de senha *" v-model="passConfirmation" :upperCase="0"/>
                     </div>
                 </div>
                 </ValidationObserver>
