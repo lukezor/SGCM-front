@@ -32,8 +32,6 @@ function internalRequest(method, url, data, skipToken) {
             'Authorization': 'Token ' + $store.state.token,
             'Content-Type': 'application/json'
         }
-
-        console.log("infos: \n",baseUrl + '/' + url, method, headers)
     return axios({
         method: method,
         headers: headers,

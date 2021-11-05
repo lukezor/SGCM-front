@@ -5,7 +5,7 @@
         <p class="title"> Geração de relatórios </p>
       </div>
       <div class="container is-fluid">
-        <Table :data="dados" :columns="colunas"/>
+        <Table :data="dados" :columns="colunas" :path="'/relatorios/'"/>
       </div>
     </div>
   </div>
@@ -20,11 +20,10 @@ export default {
   data(){
     return{
       dados:[
-        { 'id': 1, 'nome_relatorio': 'Idade média de pacientes', 'tipo_relatorio': 'Simples'},
-        { 'id': 2, 'nome_relatorio': 'Horários com maior número de consultas', 'tipo_relatorio': 'Simples'},
-        { 'id': 3, 'nome_relatorio': 'Meses com maior número de consultas', 'tipo_relatorio': 'Simples'},
-        { 'id': 4, 'nome_relatorio': 'Pacientes com maior número de consultas', 'tipo_relatorio': 'Avançado'},
-        { 'id': 5, 'nome_relatorio': 'Relação de consultas realizadas e canceladas', 'tipo_relatorio': 'Simples'}
+        { 'id': 1, 'nome_relatorio': 'Informações de faixa etária de pacientes', 'tipo_relatorio': 'Avançado'},
+        { 'id': 2, 'nome_relatorio': 'Horários, dias e meses com maior número de consultas', 'tipo_relatorio': 'Avançado'},
+        { 'id': 3, 'nome_relatorio': 'Pacientes com maior número de consultas', 'tipo_relatorio': 'Simples'},
+        { 'id': 4, 'nome_relatorio': 'Relação de consultas realizadas e canceladas', 'tipo_relatorio': 'Simples'}
       ],
       colunas:[
                 {
@@ -37,6 +36,10 @@ export default {
                     label: 'Tipo de relatório',
                     searchable: true,
                 },
+                {
+                  field: 'relatorio',
+                  label: 'Gerar'
+                }
             ]
       }
     },

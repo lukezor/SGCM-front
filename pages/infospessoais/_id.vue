@@ -90,6 +90,25 @@
                                 <CustomInput rules="required|max:15" type="text" label="Cor/Raça *" v-model="infos.cor_raca"/>
                             </div>
                         </div>
+
+                        <div class="columns">
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="required|max:50" type="text" label="Religião *" v-model="infos.religiao"/>
+                            </div>
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="required|max:50" type="text" label="Estado civil *" v-model="infos.estado_civil"/>
+                            </div>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="max:50" type="text" label="Plano de saúde" v-model="infos.plano_saude"/>
+                            </div>
+                            <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                                <CustomInput rules="max:50" type="text" label="Responsável/cuidador/acompanhante" v-model="infos.responsável"/>
+                            </div>
+                        </div>
+
                     </div>
                 </ValidationObserver>
             </div>
@@ -138,6 +157,10 @@
                     telefone:null,
                     data_nascimento:null,
                     cor_raca:null,
+                    estado_civil: null,
+                    religiao: null,
+                    plano_saude: null,
+                    responsavel: null
                 },
                 data_de_nascimento:null,
                 users:[],
