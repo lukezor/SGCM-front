@@ -5,7 +5,7 @@ import $store from '~/store/userData'
 const axios = require('axios')
 const urljoin = require('url-join')
 const queryString = require('query-string')
-const isDeploy = false
+const isDeploy = true
 
 
 function getUrl() {
