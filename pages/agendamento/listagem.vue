@@ -117,8 +117,14 @@ export default {
   margin-bottom: 10px;
 }
 .buttons{
-  position: fixed;
-  bottom: 50px;
+  display: flex;
+  margin-top:20px;
+  justify-content: left;
+}
+@media (max-width: 768px) {
+  .buttons{
+    justify-content: center;
+  }
 }
 .reloadButton{
     background-color: #4d66b083;

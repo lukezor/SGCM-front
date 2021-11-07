@@ -8,7 +8,7 @@
       </div>
       <div class="infosWrapper">
           <p> Data: {{today}} </p>
-          <p v-if="userType!='PACIENTE'"> Consultas marcadas hoje: {{consultasMarcadas}} </p>
+          <p v-if="userType!='PACIENTE'"> Consultas marcadas para hoje: {{consultasMarcadas}} </p>
           <p v-else> Minhas consultas hoje: {{consultasMarcadas}} </p>
       </div>
       <div class="buttonArea">

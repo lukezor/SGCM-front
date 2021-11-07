@@ -105,7 +105,7 @@
                                 <CustomInput rules="max:50" type="text" label="Plano de saúde" v-model="infos.plano_saude"/>
                             </div>
                             <div class="column is-full-mobile is-half-tablet is-4-desktop">
-                                <CustomInput rules="max:50" type="text" label="Responsável/cuidador/acompanhante" v-model="infos.responsável"/>
+                                <CustomInput rules="max:50" type="text" label="Responsável/cuidador/acompanhante" v-model="infos.reponsavel"/>
                             </div>
                         </div>
 
@@ -160,7 +160,7 @@
                     estado_civil: null,
                     religiao: null,
                     plano_saude: null,
-                    responsavel: null
+                    reponsavel: null
                 },
                 data_de_nascimento:null,
                 users:[],

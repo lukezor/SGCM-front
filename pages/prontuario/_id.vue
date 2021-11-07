@@ -7,8 +7,10 @@
                     <b-button type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
                 </div>
                 <div style="display:flex;justify-content:space-between" v-else>
-                    <h1 class="title"> Editar prontuário </h1>
-                    <b-button type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
+                    <h1 v-if="userType=='MEDICO'" class="title"> Alterar prontuário </h1>
+                    <h1 v-else class="title"> Visualizar prontuário </h1>
+                    <b-button v-if="userType=='MEDICO' && prontuario.id == null" type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
+                    <b-button v-if="userType=='MEDICO' && prontuario.id" type='is-primary' @click.prevent="alterar()"> Alterar prontuário </b-button>
                 </div>
             </div>
             <ValidationObserver ref="observer">
@@ -23,15 +25,18 @@
                             <div v-if="!prontuario.id" class="column is-full-mobile is-half-tablet is-half-desktop">
                                 <CustomSelect
                                     :itens="pacientes"
-                                    label="Paciente"
+                                    label="Paciente (usuário)"
                                     itemValue="id"
                                     itemText="fullName"
                                     v-model="prontuario.id_paciente"
                                     @input="carregaInfos()"
                                 />
                             </div>
+                            <div v-else class="column is-full-mobile is-half-tablet is-half-desktop">
+                                <CustomInput disabled rules="required|max:150" type="text" label="Paciente (usuário)" v-model="paciente"/>
+                            </div>
                             <div v-if="prontuario.id_paciente" class="column is-full-mobile is-half-tablet is-6-desktop">
-                                    <CustomInput disabled rules="required|max:150" type="text" label="Nome completo" v-model="infos.nome_completo"/>
+                                <CustomInput disabled rules="required|max:150" type="text" label="Nome completo" v-model="infos.nome_completo"/>
                             </div>
                         </div>
                         <div v-if="prontuario.id_paciente">   
@@ -89,7 +94,7 @@
 
                             <div class="columns">
                                 <div class="column is-full-mobile is-half-tablet is-6-desktop">
-                                    <CustomInput disabled rules="required|max:150" type="text" label="Responsável/cuidador/acompanhante" v-model="infos.responsavel"/>
+                                    <CustomInput disabled rules="required|max:150" type="text" label="Responsável/cuidador/acompanhante" v-model="infos.reponsavel"/>
                                 </div>
                                 <div class="column is-full-mobile is-half-tablet is-6-desktop">
                                     <CustomInput disabled rules="required|max:150" type="text" label="Plano de saúde" v-model="infos.plano_saude"/>
@@ -113,13 +118,13 @@
                     <b-step-item step="2" :clickable="true" label="Primeiro contato">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Queixa principal e duraçao (QD)" v-model="prontuario.qd"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Queixa principal e duraçao (QD)" v-model="prontuario.qd"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="História da doença atual" v-model="prontuario.hda"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="História da doença atual" v-model="prontuario.hda"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exame físico geral" v-model="prontuario.efg"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exame físico geral" v-model="prontuario.efg"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -127,13 +132,13 @@
                     <b-step-item step="3" :clickable="true" label="Histórico">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hábitos de vida" v-model="prontuario.habitos"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hábitos de vida" v-model="prontuario.habitos"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes pessoais" v-model="prontuario.antecedentes_pessoais"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes pessoais" v-model="prontuario.antecedentes_pessoais"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes familíares" v-model="prontuario.antecedentes_familiares"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes familíares" v-model="prontuario.antecedentes_familiares"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -141,13 +146,13 @@
                     <b-step-item step="4" :clickable="true" label="Diagnóstico">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hipótese diagnóstica + CID" v-model="prontuario.hipotese_cid"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hipótese diagnóstica + CID" v-model="prontuario.hipotese_cid"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -155,13 +160,13 @@
                     <b-step-item step="5" :clickable="true" label="Prescrição">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Evoluções" v-model="prontuario.evolucoes"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Evoluções" v-model="prontuario.evolucoes"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Receitas" v-model="prontuario.receitas"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Receitas" v-model="prontuario.receitas"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Informações adicionais" v-model="prontuario.info_adicional"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Informações adicionais" v-model="prontuario.info_adicional"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -180,7 +185,6 @@
     import apiClient from '~/utils/apiClient'
     import $store from '~/store/userData';
     import moment from 'moment'
-
     export default {
 
         middleware: ['authenticated','prontuarioPermission'],
@@ -213,14 +217,6 @@
                     evolucoes:null,
                     info_adicional:null
                 },
-                agendamento: {
-                    id: this.$route.params.id,
-                    id_medico: null,
-                    id_paciente: null,
-                    status: "0",
-                    data: null,
-                    hora: null,
-                },
                 infos: {
                     id:null,
                     id_paciente: null,
@@ -235,7 +231,15 @@
                     religiao: null,
                     estado_civil: null,
                     plano_saude: null,
-                    responsavel: null
+                    reponsavel: null
+                },
+                agendamento: {
+                    id: this.$route.params.id,
+                    id_medico: null,
+                    id_paciente: null,
+                    status: "0",
+                    data: null,
+                    hora: null,
                 },
                 unformattedDate: null,
                 obj:[],
@@ -295,47 +299,35 @@
             sendSuccess(msg){
                 notification.sendNotification(msg, 'is-success', 5000)
             },
-            sendInfo(msg){
-                notification.sendNotification(msg, 'is-primary', 5000)
-            },
             async salvar() {
-                if(!this.agendamento.id_medico || !this.agendamento.id_paciente || !this.agendamento.hora)
-                    return this.sendError("Preencha todos os campos.")
-                this.agendamento.hora = this.agendamento.hora.substring(0,5)
-                this.agendamento.data = this.getCorrectDate()
                 try{
-                    await apiClient.createAgendamento(this.agendamento)
+                    await apiClient.createProntuario(this.prontuario)
                 }catch(err){
                     console.log(err)
-                    this.sendError("Já existe uma consulta nesse mesmo horário, por favor escolha outro.")
+                    this.sendError("Erro ao criar o prontuário")
                     return
                 }
-                this.sendSuccess('Consulta agendada com sucesso!')
+                this.sendSuccess('Prontuário criado com sucesso!')
                 this.retornar()
             },
             async alterar() {
-                if(!this.agendamento.id_medico || !this.agendamento.id_paciente || !this.agendamento.hora)
-                    return this.sendError("Preencha todos os campos.")
-                const horaTratada = this.agendamento.hora.substring(0,5)
-                const dataHora = this.agendamento.data + "T" + horaTratada
-                const objTratado = {
-                    status: String(this.agendamento.status),
-                    data: this.agendamento.data,
-                    hora: horaTratada,
-                    data_hora: dataHora
-                }
+                this.today = new Date();
+                var dd = String(this.today.getDate()).padStart(2, '0');
+                var mm = String(this.today.getMonth() + 1).padStart(2, '0');
+                var yyyy = this.today.getFullYear();
+                this.prontuario.ref = yyyy + '-' + mm + '-' + dd 
                 try{
-                    await apiClient.alterarAgendamento(objTratado,this.agendamento.id)
+                    await apiClient.alterarProntuario(this.prontuario,this.prontuario.id)
                 }catch(err){
                     console.log(err)
-                    this.sendError("Já existe uma consulta nesse mesmo horário, por favor escolha outro.")
+                    this.sendError("Erro ao alterar o prontuário")
                     return
                 }
-                this.sendSuccess('Consulta alterada com sucesso!')
+                this.sendSuccess('Prontuário alterado com sucesso!')
                 this.retornar()
             },
             retornar(){
-                this.$router.push('/agendamento/listagem')
+                this.$router.push('/prontuario/listagem')
             },
             makeFullName(user){
                 user.fullName = user.first_name.toUpperCase() + " " + user.last_name.toUpperCase()
@@ -392,24 +384,21 @@
             try {    
                 this.pacientes = await apiClient.getUserByType("PACIENTE")
                 this.pacientes.forEach(this.makeFullName)
-                this.medicos = await apiClient.getUserByType("MEDICO")
-                this.medicos.forEach(this.makeFullName)
             } catch (err) {
                 this.sendError('Ocorreu um erro ao buscar, tente novamente!')
             }
             if (this.prontuario.id) {
-                try {    
-                    this.agendamento = await apiClient.getAgendamentoById(this.agendamento.id)
-                    console.log(this.agendamento)
-                    this.paciente = this.getFullName(this.pacientes,this.agendamento.id_paciente)
-                    this.medico = this.getFullName(this.medicos,this.agendamento.id_medico)
+                try {
+                    this.prontuario = await apiClient.getProntuario(this.prontuario.id)
+                    this.paciente = this.getFullName(this.pacientes,this.prontuario.id_paciente)
+                    this.carregaInfos()
                 } catch (err) {
                     this.sendError('Ocorreu um erro ao buscar, tente novamente!')
                 }
             }
             else{
-                if(this.userType == 'MEDICO') this.agendamento.id_medico = $store.state.user.id
-                if(this.userType == 'PACIENTE') this.agendamento.id_paciente = $store.state.user.id
+                if(this.userType == 'MEDICO') this.prontuario.id_medico = $store.state.user.id
+                if(this.userType == 'PACIENTE') this.prontuario.id_paciente = $store.state.user.id
             }
             loadingComponent.close()
         },
