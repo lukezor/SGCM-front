@@ -57,7 +57,7 @@ export default {
         },
         async logout(){
             await apiClient.logout()
-            window.location.replace('http://localhost:3000/login')
+            window.location.replace('https://sgcm-front.herokuapp.com/login')
         }
    }
 };
