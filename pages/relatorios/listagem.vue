@@ -23,6 +23,7 @@ export default {
         { 'id': 1, 'nome_relatorio': 'Informações de faixa etária de pacientes', 'tipo_relatorio': 'Avançado'},
         { 'id': 2, 'nome_relatorio': 'Horários, dias e meses com maior número de consultas', 'tipo_relatorio': 'Avançado'},
         { 'id': 3, 'nome_relatorio': 'Pacientes com maior número de consultas', 'tipo_relatorio': 'Simples'},
+        { 'id': 5, 'nome_relatorio': 'Médicos com maior número de consultas', 'tipo_relatorio': 'Simples'},
         { 'id': 4, 'nome_relatorio': 'Relação de consultas realizadas e canceladas', 'tipo_relatorio': 'Simples'}
       ],
       colunas:[
@@ -68,9 +69,5 @@ export default {
   margin-top:10px;
   margin-left:20px;
   margin-bottom: 10px;
-}
-.buttons{
-  position: fixed;
-  bottom: 50px;
 }
 </style>

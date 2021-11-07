@@ -9,14 +9,8 @@ const isDeploy = false
 
 
 function getUrl() {
-    switch (isDeploy){
-        case true:
-            return 'https://api-deploy.com/api'
-        case false:
-            return 'http://localhost:8000'
-        default:
-            return 'http://localhost:8000'
-    }
+    if(isDeploy) return 'https://sgcm-back.herokuapp.com'
+    else return 'http://localhost:8000'
 }
 
 function internalRequest(method, url, data, skipToken) {
@@ -249,6 +243,21 @@ class ApiClient {
 
     async getProntuariosByQuery(query){
         return internalGet(urljoin('api','prontuarios','/',query))
+    }
+    async getProntuario(id){
+        return internalGet(urljoin('api', 'prontuarios', id.toString() + '/'))
+    }
+    async createProntuario(obj) {
+        return internalPost('api/prontuarios/', obj)
+    }
+    async alterarProntuario(obj,id) {
+        return internalPut('api/prontuarios/'+id+'/', obj)
+    }
+
+    //Relatorios
+
+    async getRelatorio(id){
+        return internalPost('api/relatorios/', {"id":id})
     }
 }
 

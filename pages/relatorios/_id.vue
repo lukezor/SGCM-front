@@ -3,12 +3,97 @@
         <div class= "padding-geral">
             <div class="titulo">
                 <div>
-                    <h1 class="title"> Geração de relatórios </h1>
+                    <p v-if="relatorio.id == '1'" class="title"> Informações de faixa etária de pacientes </p>
+                    <p v-else-if="relatorio.id == '2'" class="title"> Horários, dias e meses com maior número de consultas </p>
+                    <p v-else-if="relatorio.id == '3'" class="title"> Pacientes com maior número de consultas </p>
+                    <p v-else-if="relatorio.id == '4'" class="title"> Relação de consultas realizadas e canceladas </p>
+                    <p v-else-if="relatorio.id == '5'" class="title"> Médicos com maior número de consultas </p>
                 </div>
             </div>
 
-            <div class ="padding-interno">
-                <div>{{relatorio.id}}</div>
+            <div v-if="infos" class ="padding-interno">
+                <div v-if="relatorio.id == '1'">
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Total de pacientes com informações cadastradas" v-model="infos.total_registered"/>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Idade média dos pacientes" v-model="infos.average_age"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Nome do paciente mais velho" v-model="infos.oldest_name"/>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Idade" v-model="infos.oldest_age"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Nome do paciente mais novo" v-model="infos.youngest_name"/>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Idade" v-model="infos.youngest_age"/>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="relatorio.id == '2'">
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Dia com maior número de consultas" v-model="infos.best_day.day"/>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade" v-model="infos.best_day.count"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Mês com maior número de consultas" v-model="infos.best_month.month"/>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade" v-model="infos.best_month.count"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Horário com maior número de consultas" :value="infos.best_time.horario.substring(0,5)"/>
+                        </div>
+                        <div class="column is-full-mobile is-half-tablet is-2-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade" v-model="infos.best_time.count"/>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="relatorio.id == '4'">
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade total de consultas" v-model="infos.total"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade de consultas aguardando confirmação" v-model="infos.awaiting"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade de consultas confirmação" v-model="infos.confirmed"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade de consultas canceladas" v-model="infos.canceled"/>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-full-mobile is-half-tablet is-4-desktop">
+                            <CustomInput disabled rules="max:150" type="text" label="Quantidade de consultas finalizadas" v-model="infos.ended"/>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="relatorio.id == '5' || relatorio.id == '3'">
+                    <Table :data="infos" :columns="colunas"/>
+                </div>
             </div>
                 
 
@@ -23,7 +108,7 @@
 <script>
     import { ValidationObserver } from 'vee-validate'
     import CustomInput from '~/components/atoms/CustomInput.vue'
-    import CustomSelect from '~/components/atoms/CustomSelect.vue'
+    import Table from '~/components/molecules/Table.vue'
     import notification from '~/utils/notification'
     import apiClient from '~/utils/apiClient'
     import $store from '~/store/userData';
@@ -36,23 +121,26 @@
         components: {
             ValidationObserver,
             CustomInput,
-            CustomSelect
+            Table
         },
         data(){
             return {
                 relatorio: {
-                    id: this.$route.params.id,
-                    user_type: null,
-                    email: null,
-                    password: null,
-                    username: null,
-                    first_name: null,
-                    last_name: null,
-                    is_superuser: false,
-                    is_staff: false,
-                    info_cadastrada: null,
+                    id: this.$route.params.id
                 },
-                passConfirmation: null
+                infos: null,
+                colunas:[
+                    {
+                        field: 'name',
+                        label: 'Nome',
+                        searchable: true,
+                    },
+                    {
+                        field: 'qnt',
+                        label: 'Quantidade de consultas',
+                        centered: true,
+                    },
+                ]
             }
         },
         methods:{
@@ -62,42 +150,8 @@
             sendSuccess(msg){
                 notification.sendNotification(msg, 'is-success', 5000)
             },
-            async salvar() {
-                console.log(this.relatorio)
-                try{
-                    await apiClient.createUser(this.relatorio)
-                    }catch(err){
-                        this.sendError(err)
-                        return
-                    }
-                this.sendSuccess('Usuário criado com sucesso!')
-                this.retornar()
-            },
-            async alterar() {
-                const objTratado = {
-                    id: this.user.id,
-                    email: this.user.email,
-                    user_type: this.user.user_type,
-                    first_name: this.user.first_name,
-                    last_name: this.user.last_name,
-                }
-                try{
-                    await apiClient.updateUser(objTratado)
-                    }catch(err){
-                        this.sendError(err)
-                        return
-                    }
-                    this.sendSuccess('Usuário alterado com sucesso!')
-                    this.retornar()
-            },
             retornar(){
                 this.$router.push('/relatorios/listagem')
-            }
-        },
-
-        computed:{
-            userType(){
-                return $store.state.user.user_type
             }
         },
 
@@ -105,9 +159,9 @@
             if (this.relatorio.id) {
                 const loadingComponent = this.$buefy.loading.open()
                 try {    
-                    //this.user = await apiClient.getUserById(this.user.id)
+                    this.infos = await apiClient.getRelatorio(this.relatorio.id)
                 } catch (err) {
-                    //this.sendError('Ocorreu um erro ao buscar, tente novamente!')
+                    this.sendError('Ocorreu um erro ao buscar, tente novamente!')
                 } finally {
                     loadingComponent.close()
                 }
