@@ -14,7 +14,7 @@
                                     :itens="users"
                                     label="Usuário *" 
                                     itemValue="id"
-                                    itemText="username"
+                                    itemText="userPlusFullName"
                                     v-model="infos.id_paciente"
                             />
                         </div>
@@ -265,8 +265,12 @@
                 let mm = data[5]+data[6]
                 let yyyy = data[0]+data[1]+data[2]+data[3]
                 return dd+'/'+mm+'/'+yyyy
-            }
+            },
+            makeFullName(user){
+                user.userPlusFullName = user.username + " - " + user.first_name.toUpperCase() + " " + user.last_name.toUpperCase()
+            },
         },
+        
 
         async created() {
             const loadingComponent = this.$buefy.loading.open()
@@ -274,6 +278,7 @@
                 if(this.userType != "PACIENTE"){
                     try {    
                         this.users = await apiClient.getPacientesSemInfo()
+                        this.users.forEach(this.makeFullName)
                     } catch (err) {
                         this.sendError('Ocorreu um erro ao buscar, tente novamente!')
                     } finally {

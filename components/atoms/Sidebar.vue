@@ -15,13 +15,13 @@
         />
         <b-menu>
           <b-menu-list label="Páginas">
-            <b-menu-item icon="home" label="Home" tag="router-link" to="/"></b-menu-item>
-            <b-menu-item icon="clock-outline" label="Agendamentos" tag="router-link" to="/agendamento/listagem"></b-menu-item>
-            <b-menu-item v-if="userType == 'PACIENTE' || userType == 'MEDICO'" icon="newspaper-variant-outline" label="Prontuários" tag="router-link" to="/prontuario/listagem"></b-menu-item>
-            <b-menu-item v-if="userType == 'ADMIN'" icon="account" label="Cadastros" tag="router-link" to="/cadastro/listagem"></b-menu-item>
-            <b-menu-item v-if="userType == 'ADMIN' || userType == 'SECRETARIO'" icon="account-details" label="Informações Pessoais" tag="router-link" to="/infospessoais/listagem"></b-menu-item>
-            <b-menu-item v-if="userType == 'PACIENTE'" icon="account-details" label="Informações Pessoais" tag="router-link" to="/infospessoais/"></b-menu-item>
-            <b-menu-item v-if="userType == 'ADMIN'" icon="chart-box-outline" label="Relatórios" tag="router-link" to="/relatorios/listagem"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" icon="home" label="Home" tag="router-link" to="/"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" icon="clock-outline" label="Agendamentos" tag="router-link" to="/agendamento/listagem"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" v-if="userType == 'PACIENTE' || userType == 'MEDICO'" icon="newspaper-variant-outline" label="Prontuários" tag="router-link" to="/prontuario/listagem"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" v-if="userType == 'ADMIN'" icon="account" label="Cadastros" tag="router-link" to="/cadastro/listagem"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" v-if="userType == 'ADMIN' || userType == 'SECRETARIO'" icon="account-details" label="Informações Pessoais" tag="router-link" to="/infospessoais/listagem"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" v-if="userType == 'PACIENTE'" icon="account-details" label="Informações Pessoais" tag="router-link" to="/infospessoais/"></b-menu-item>
+            <b-menu-item @click.native="changeMenuState" v-if="userType == 'ADMIN'" icon="chart-box-outline" label="Relatórios" tag="router-link" to="/relatorios/listagem"></b-menu-item>
           </b-menu-list>
           <b-menu-list label="Ações">
             <b-menu-item @click.native="changePass" label="Alterar Senha" icon="lock-reset"></b-menu-item>
@@ -53,6 +53,7 @@ export default {
             this.$store.commit('changeMenuState')
         },
         changePass(){
+            this.changeMenuState()
             this.$router.push('/alterar-senha')
         },
         async logout(){

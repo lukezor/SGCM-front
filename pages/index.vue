@@ -2,7 +2,8 @@
 <div class = "home">
   <div v-if="userLoaded" class = "container-mobile">
     <p class = "mobile-title">Bem vindo ao sistema!</p>
-    <p class = "mobile-subtitle">Utilize o menu lateral para acessar as funcionalidades.</p>
+    <p class = "mobile-subtitle">Utilize o menu lateral para acessar</p>
+    <p class = "mobile-subtitle">as funcionalidades.</p>
   </div>
   <div v-if="userLoaded" class = "container-left">
     <!-- Superior Esquerdo -->

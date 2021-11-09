@@ -4,13 +4,19 @@
             <div class="titulo">
                 <div style="display:flex;justify-content:space-between" v-if="prontuario.id == null">
                     <h1 class="title"> Novo prontuário </h1>
-                    <b-button type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
+                    <div class="handle-mobile">
+                        <b-button style="margin-right:5px" @click.native="retornar()" type="is-primary-light"> Voltar </b-button>
+                        <b-button type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
+                    </div>
                 </div>
                 <div style="display:flex;justify-content:space-between" v-else>
                     <h1 v-if="userType=='MEDICO'" class="title"> Alterar prontuário </h1>
                     <h1 v-else class="title"> Visualizar prontuário </h1>
-                    <b-button v-if="userType=='MEDICO' && prontuario.id == null" type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
-                    <b-button v-if="userType=='MEDICO' && prontuario.id" type='is-primary' @click.prevent="alterar()"> Alterar prontuário </b-button>
+                    <div style="display:flex;justify-content:space-between">
+                        <b-button @click.native="retornar()" type="is-primary-light"> Voltar </b-button>
+                        <b-button v-if="userType=='MEDICO' && prontuario.id == null" type='is-primary' @click.prevent="salvar()"> Salvar prontuário </b-button>
+                        <b-button v-if="userType=='MEDICO' && prontuario.id" type='is-primary' @click.prevent="alterar()"> Alterar prontuário </b-button>  
+                    </div>
                 </div>
             </div>
             <ValidationObserver ref="observer">
@@ -40,7 +46,7 @@
                             </div>
                         </div>
                         <div v-if="prontuario.id_paciente">   
-                            <div class="columns">
+                            <div class="columns is-multiline">
                                 <div class="column is-full-mobile is-half-tablet is-3-desktop">
                                     <CustomSelect
                                         disabled
@@ -101,7 +107,7 @@
                                 </div>
                             </div>
 
-                            <div class="columns">
+                            <div class="columns is-multiline">
                                 <div class="column is-full-mobile is-half-tablet is-4-desktop">
                                     <CustomInput disabled rules="required|max:150" type="text" label="Cor/Raça" v-model="infos.cor_raca"/>
                                 </div>
@@ -118,13 +124,13 @@
                     <b-step-item step="2" :clickable="true" label="Primeiro contato">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Queixa principal e duraçao (QD)" v-model="prontuario.qd"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Queixa principal e duraçao (QD)" v-model="prontuario.qd"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="História da doença atual" v-model="prontuario.hda"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="História da doença atual" v-model="prontuario.hda"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exame físico geral" v-model="prontuario.efg"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exame físico geral" v-model="prontuario.efg"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -132,13 +138,13 @@
                     <b-step-item step="3" :clickable="true" label="Histórico">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hábitos de vida" v-model="prontuario.habitos"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hábitos de vida" v-model="prontuario.habitos"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes pessoais" v-model="prontuario.antecedentes_pessoais"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes pessoais" v-model="prontuario.antecedentes_pessoais"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes familíares" v-model="prontuario.antecedentes_familiares"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Antecedentes familíares" v-model="prontuario.antecedentes_familiares"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -146,13 +152,13 @@
                     <b-step-item step="4" :clickable="true" label="Diagnóstico">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hipótese diagnóstica + CID" v-model="prontuario.hipotese_cid"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hipótese diagnóstica + CID" v-model="prontuario.hipotese_cid"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -160,13 +166,13 @@
                     <b-step-item step="5" :clickable="true" label="Prescrição">
                         <div class="columns is-multiline">
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Evoluções" v-model="prontuario.evolucoes"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Evoluções" v-model="prontuario.evolucoes"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Receitas" v-model="prontuario.receitas"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Receitas" v-model="prontuario.receitas"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="required|max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Informações adicionais" v-model="prontuario.info_adicional"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Informações adicionais" v-model="prontuario.info_adicional"/>
                             </div>
                         </div>
                     </b-step-item>
@@ -426,5 +432,14 @@
     }
     .botoes{
         margin-top: 20px;
+    }
+    .handle-mobile{
+        display:flex
+    }
+    @media (max-width: 768px) {
+        .handle-mobile{
+            align-items: center;
+            display:block
+        }
     }
 </style>
