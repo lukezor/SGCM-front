@@ -4,7 +4,7 @@ FrontEnd repository using Vue.JS for the Final Paper on Computer Engineering by 
 
 SGCM stands for Sistema Gerenciador de Clínicas Médicas (Medical clinic management system).
 
-## Build Setup
+## How to build
 
 ```bash
 # install dependencies
