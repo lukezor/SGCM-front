@@ -216,6 +216,11 @@ class ApiClient {
         var params = "?id_paciente="+ id
         return internalGet(urljoin('api','agendamentos','/',params))
     }
+    async getAllMedicoAgendamentos(id) {
+        // Pegar os agendamentos para o medico que está usando o sistema
+        var params = "?id_medico="+ id
+        return internalGet(urljoin('api','agendamentos','/',params))
+    }
 
     async getAgendamentosToday(today) {
         var params = "?data=" + today

@@ -77,6 +77,15 @@ export default {
               notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
             }
           }
+          else if($store.state.user.user_type == "MEDICO"){
+              this.colunas[5].field = 'crud-options-medico'
+              try{
+              this.dados = await apiClient.getAllMedicoAgendamentos($store.state.user.id)
+            } catch (err) {
+              console.log("Erro: ",err)
+              notification.sendNotification('Ocorreu um erro ao buscar, tente novamente!', 'is-danger', 5000)
+            }
+          }
           else{
               this.colunas[0].field = 'id_paciente'
               this.colunas[0].label = 'Identificador do paciente'

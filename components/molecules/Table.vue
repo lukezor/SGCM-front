@@ -85,6 +85,13 @@
                                 <b-button class="is-danger is-outlined" icon-right="delete" @click="deelete(props.row.id)"/>
                             </div>
                         </template>
+                        <template v-else-if="column.field == 'crud-options-medico'">
+                            <div class="editar">
+                                <b-button class="is-primary is-outlined" icon-right="alarm-check" :disabled="disabledRows.includes(props.row.id)" @click="finish(props.row.id)"/>
+                                <b-button class="is-primary is-outlined" icon-right="border-color" @click="$router.push({path: path + props.row.id})"/>
+                                <b-button class="is-danger is-outlined" icon-right="delete" @click="deelete(props.row.id)"/>
+                            </div>
+                        </template>
                         <template v-else-if="column.field == 'crud-options-confirm'">
                             <div class="editar">
                                 <b-button class="is-primary is-outlined" icon-right="check" @click="confirm(props.row.id)" :disabled="disabledRows.includes(props.row.id)"/>
@@ -202,19 +209,38 @@
                 }
             },
             replaceAndSaveStatus(status,row){
-                if(status == '0') return "Aguardando confirmação"
-                if(status == '1'){
-                    if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
-                    return "Confirmado"
+                if(this.$route.path.includes('agendamento')){
+                    if(status == '0'){
+                        if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                        return "Aguardando confirmação"
+                    } 
+                    if(status == '1'){
+                        return "Confirmado"
+                    }
+                    if(status == '2'){
+                        if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                        return "Cancelado" 
+                    } 
+                    if(status == '3'){
+                        if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                        return "Finalizado" 
+                    } 
                 }
-                if(status == '2'){
-                    if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
-                    return "Cancelado" 
-                } 
-                if(status == '3'){
-                    if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
-                    return "Finalizado" 
-                } 
+                else{
+                    if(status == '0') return "Aguardando confirmação"
+                    if(status == '1'){
+                        if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                        return "Confirmado"
+                    }
+                    if(status == '2'){
+                        if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                        return "Cancelado" 
+                    } 
+                    if(status == '3'){
+                        if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
+                        return "Finalizado" 
+                    } 
+                }
             }
         },
         async created(){

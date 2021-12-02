@@ -14,7 +14,7 @@
                 <ValidationObserver ref="observer">
                 <div class="columns">
                     <!-- Bloco user ADMIN ou MEDICO ou SECRETARIO / CRIAR NOVO -->
-                    <div v-if="!agendamento.id && userType!='PACIENTE'" class="column is-full-mobile is-half-tablet is-4-desktop">
+                    <div v-if="!agendamento.id && userType!='PACIENTE'" class="column is-full-mobile is-half-tablet is-5-desktop">
                         <CustomSelect
                                 :itens="pacientes"
                                 label="Paciente *" 
@@ -23,7 +23,7 @@
                                 v-model="agendamento.id_paciente"
                         />
                     </div>
-                    <div v-if="!agendamento.id && userType!='PACIENTE'" class="column is-full-mobile is-half-tablet is-4-desktop">
+                    <div v-if="!agendamento.id && userType!='PACIENTE'" class="column is-full-mobile is-half-tablet is-5-desktop">
                         <CustomSelect
                                 :itens="medicos"
                                 label="Medico *" 
@@ -33,10 +33,10 @@
                         />
                     </div>
                     <!-- Bloco user PACIENTE / CRIAR NOVO -->
-                    <div v-if="!agendamento.id && userType=='PACIENTE'" class="column is-full-mobile is-half-tablet is-4-desktop">
+                    <div v-if="!agendamento.id && userType=='PACIENTE'" class="column is-full-mobile is-half-tablet is-5-desktop">
                         <CustomInput rules="required|max:150" type="text" label="Paciente *" :upperCase="0" :disabled="true" v-model="myUser"/>
                     </div>
-                    <div v-if="!agendamento.id && userType=='PACIENTE'" class="column is-full-mobile is-half-tablet is-4-desktop">
+                    <div v-if="!agendamento.id && userType=='PACIENTE'" class="column is-full-mobile is-half-tablet is-5-desktop">
                         <CustomSelect
                                 :itens="medicos"
                                 label="Medico *" 
@@ -45,21 +45,21 @@
                                 v-model="agendamento.id_medico"
                         />
                     </div>
-                    <div v-if="agendamento.id" class="column is-full-mobile is-half-tablet is-4-desktop">
+                    <div v-if="agendamento.id" class="column is-full-mobile is-half-tablet is-5-desktop">
                         <CustomInput rules="required|max:150" type="text" label="Paciente *" :upperCase="0" :disabled="true" v-model="paciente"/>
                     </div>
-                    <div v-if="agendamento.id" class="column is-full-mobile is-half-tablet is-4-desktop">
+                    <div v-if="agendamento.id" class="column is-full-mobile is-half-tablet is-5-desktop">
                         <CustomInput rules="required|max:150" type="text" label="Médico *" :upperCase="0" :disabled="true" v-model="medico"/>
                     </div>
                 </div>
-                <div v-if="agendamento.id_medico && agendamento.id_paciente" class="columns">
-                    <div class="column is-full-mobile is-half-tablet is-3-desktop">
+                <div v-if="agendamento.id_medico && agendamento.id_paciente" class="columns is-multiline">
+                    <div class="column is-full-mobile is-full-tablet is-5-desktop">
                         <b-field label="Data *">
                             <Datepicker v-if="!agendamento.id" :disabledDates="obj" :inline="true" v-model="unformattedDate"></Datepicker>
                             <CustomInput v-else rules="required|max:150" type="text" :upperCase="0" :disabled="true" v-model="agendamento.data"/>
                         </b-field>
                     </div>
-                    <div class="column is-full-mobile is-half-tablet is-5-desktop">
+                    <div class="column is-full-mobile is-full-tablet is-5-desktop">
                         <CustomSelect
                                 :itens="horariosDisponiveis"
                                 label="Horário *" 
