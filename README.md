@@ -1,6 +1,6 @@
 # SGCM - FrontEnd
 
-FrontEnd repository using Vue.JS for the Final Paper on Computer Engineering by the student Gabriel Sana Ferreira da Silva @utfpr. 
+FrontEnd repository using Vue.JS for the Final Paper on Computer Engineering by the student Gabriel Sana Ferreira da Silva @UTFPR. 
 
 SGCM stands for Sistema Gerenciador de Clínicas Médicas (Medical clinic management system).
 
