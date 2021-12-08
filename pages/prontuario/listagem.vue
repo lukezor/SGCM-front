@@ -67,7 +67,7 @@ export default {
         }
       }
       else{
-        let query = '?id_paciente'+$store.state.user.id
+        let query = '?id_paciente='+$store.state.user.id
         this.colunas[0].field = 'id_medico'
         this.colunas[0].label = 'Identificação do médico'
         this.colunas[2].field = 'crud-options-view'

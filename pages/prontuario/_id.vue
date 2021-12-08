@@ -155,10 +155,10 @@
                                 <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Hipótese diagnóstica + CID" v-model="prontuario.hipotese_cid"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
                             </div>
                             <div class="column is-full-mobile is-full-tablet is-full-desktop">
-                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Exames laboratoriais e complementares" v-model="prontuario.exames"/>
+                                <CustomInput :disabled="userType=='PACIENTE'" rules="max:2000" maxlength="2000" upperCase="0" size="is-medium" type="textarea" label="Conduta" v-model="prontuario.conduta"/>
                             </div>
                         </div>
                     </b-step-item>
