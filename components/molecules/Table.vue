@@ -115,6 +115,7 @@
  <script>
     import apiClient from '~/utils/apiClient.js'
     import notification from '~/utils/notification.js'
+    import $store from '~/store/userData';
     export default {
         data(){
             return{
@@ -209,7 +210,7 @@
                 }
             },
             replaceAndSaveStatus(status,row){
-                if(this.$route.path.includes('agendamento')){
+                if($store.state.user.user_type == 'MEDICO'){
                     if(status == '0'){
                         if(!this.disabledRows.includes(row)) this.disabledRows.push(row)
                         return "Aguardando confirmação"
